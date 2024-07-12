@@ -1,13 +1,8 @@
 import mongoose from "mongoose";
+import { DESK_STATUS, DESK_TYPE, DESK_AMENITIES } from "../utils/constants.js";
 
 const DeskSchema = new mongoose.Schema(
   {
-    // id: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    //   default: () => nanoid(),
-    // },
     location: {
       type: String,
       required: true,
@@ -15,25 +10,23 @@ const DeskSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["available", "booked", "out_of_service"],
-      default: "available",
+      enum: Object.values(DESK_STATUS),
+      default: DESK_STATUS.AVAILABLE,
     },
     type: {
       type: String,
       required: true,
-      enum: ["standard", "standing", "meeting"],
-      default: "standard",
+      enum: Object.values(DESK_TYPE),
+      default: DESK_TYPE.STANDARD,
     },
     amenities: {
       type: [String],
-      enum: [
-        "Mouse",
-        "Single Monitor",
-        "Keyboard",
-        "Two Monitors",
-        "Laptop Stand",
-      ],
-      default: ["Mouse", "Single Monitor", "Keyboard"],
+      enum: Object.values(DESK_AMENITIES),
+      default: Object.values(
+        DESK_AMENITIES.KEYBOARD,
+        DESK_AMENITIES.MOUSE,
+        DESK_AMENITIES.SINGLE_MONITOR
+      ),
     },
     currentBooking: {
       userId: {

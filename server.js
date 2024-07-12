@@ -6,6 +6,7 @@ import express, { application } from "express";
 const app = express();
 import morgan from "morgan";
 import mongoose from "mongoose";
+import { body, validationResult } from "express-validator";
 
 //routers
 import deskRouter from "./routes/deskRouter.js";
@@ -23,10 +24,13 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.post("/", (req, res) => {
-  console.log(req);
-  res.json({ message: "data received", data: req.body });
-});
+app.post(
+  "/api/v1/test",
+  (req, res) => {
+    const { name } = req.body;
+    res.json({ message: `hello ${name}` });
+  }
+);
 
 app.use("/api/v1/desks", deskRouter);
 
