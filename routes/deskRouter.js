@@ -12,6 +12,6 @@ import {
 //router.get('/',getAllDesks)
 
 router.route("/").get(getAllDesks).post(createDesk);
-router.route("/:id").get(getAllDesks).patch(updateDesk).delete(deleteDesk);
+router.route("/:id").get(getDesk).patch(updateDesk).delete(deleteDesk);
 
 export default router;
