@@ -1,5 +1,7 @@
-import { body, validationResult } from "express-validator";
-import { BadRequestError } from "../errors/customErrors.js";
+import { body, param, validationResult } from "express-validator";
+import { BadRequestError, NotFoundError } from "../errors/customErrors.js";
+import mongoose from "mongoose";
+import Desk from "../models/DeskModel.js";
 
 const withValidationErrors = (validateValues) => {
   return [
@@ -8,6 +10,9 @@ const withValidationErrors = (validateValues) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         const errorMessages = errors.array().map((error) => error.msg);
+        if (errorMessages[0].startsWith("no desk")) {
+          throw new NotFoundError(errorMessages);
+        }
         throw new BadRequestError(errorMessages);
       }
       next();
@@ -15,11 +20,15 @@ const withValidationErrors = (validateValues) => {
   ];
 };
 
-export const validateTest = withValidationErrors([
-  body("name")
-    .notEmpty()
-    .withMessage("name is required")
-    .isLength({ min: 3, max: 50 })
-    .withMessage("must be between 3 and 50 characters long ")
-    .trim(),
+export const validateDeskInput = withValidationErrors([
+  body("location").notEmpty().withMessage("location is required"),
+]);
+
+export const validateIdParam = withValidationErrors([
+  param("id").custom(async (value) => {
+    const isValidId = mongoose.Types.ObjectId.isValid(value);
+    if (!isValidId) throw new BadRequestError("invalid MongoDB id");
+    const desk = await Desk.findById(value);
+    if (!desk) throw new NotFoundError(`no desk with id ${value}`);
+  }),
 ]);
