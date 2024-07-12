@@ -75,8 +75,34 @@ app.get("/api/v1/desks/:id", (req, res) => {
 });
 
 //EDIT DESK
+app.patch("/api/v1/desks/:id", (req, res) => {
+  const { id } = req.params;
+  const { location, status, type, amenities } = req.body;
+  if (!location || !status || !type || !amenities) {
+    return res.status(400).json({ msg: "please provide needed values" });
+  }
+  const desk = desks.find((desk) => desk.id === id);
+  if (!desk) {
+    return res.status(404).json({ msg: `no desk with id ${id}` });
+  }
+  desk.location = location;
+  desk.status = status;
+  desk.type = type;
+  desk.amenities = amenities;
+  res.status(200).json({ nsg: "desk modified", desk });
+});
 
-
+//DELETE DESK
+app.delete("/api/v1/desks/:id", (req, res) => {
+  const { id } = req.params;
+  const desk = desks.find((desk) => desk.id === id);
+  if (!desk) {
+    return res.status(404).json({ msg: `no desk with id ${id}` });
+  }
+  const newDesks = desks.filter((desk) => desk.id !== id);
+  desks = newDesks;
+  res.status(200).json({ msg: "desk deleted" });
+});
 
 const port = process.env.PORT || 5100;
 
