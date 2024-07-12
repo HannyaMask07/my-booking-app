@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import Desk from "../models/DeskModel.js";
 
 let desks = [
   {
@@ -32,13 +33,8 @@ export const getAllDesks = async (req, res) => {
 };
 
 export const createDesk = async (req, res) => {
-  const { location, status, type, amenities } = req.body;
-  if (!location || !status || !type || !amenities) {
-    return res.status(400).json({ msg: "please provide needed values" });
-  }
-  const id = nanoid(10);
-  const desk = { id, location, status, type, amenities };
-  desks.push(desk);
+  const { location } = req.body;
+  const desk = await Desk.create({ location });
   res.status(201).json({ desk });
 };
 
