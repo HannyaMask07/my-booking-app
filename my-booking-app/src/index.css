@@ -318,15 +318,19 @@ button:disabled {
 
 /* BUTTONS AND BADGES */
 .standard {
-  background: #fef3c7;
-  color: #f59e0b;
+  background: #ffcc80;
+  color: #b57c00; 
 }
 
 .standing {
-  background: #e0e8f9;
-  color: #647acb;
+  background: #90caf9;
+  color: #3f51b5; 
 }
-.meeting {
+.booked {
   background: #ffeeee;
   color: #d66a6a;
+}
+.available {
+  background: #b2e0b2; 
+  color: #4caf50; 
 }
