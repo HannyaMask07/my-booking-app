@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
-import { DESK_STATUS, DESK_TYPE, DESK_AMENITIES } from "../utils/constants.js";
+import {
+  DESK_STATUS,
+  DESK_TYPE,
+  DESK_AMENITIES,
+  DESK_LOCATION,
+} from "../utils/constants.js";
 
 const DeskSchema = new mongoose.Schema(
   {
