@@ -6,7 +6,7 @@ import express, { application } from "express";
 const app = express();
 import morgan from "morgan";
 import mongoose from "mongoose";
-import { body, validationResult } from "express-validator";
+import cookieParser from "cookie-parser";
 
 //routers
 import deskRouter from "./routes/deskRouter.js";
@@ -14,18 +14,20 @@ import authRouter from "./routes/authRouter.js";
 
 //middleware
 import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
+import { authenticateUser } from "./middleware/authMiddleware.js";
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.use("/api/v1/desks", deskRouter);
+app.use("/api/v1/desks", authenticateUser, deskRouter);
 app.use("/api/v1/auth", authRouter);
 
 app.use("*", (req, res) => {

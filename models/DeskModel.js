@@ -42,6 +42,11 @@ const DeskSchema = new mongoose.Schema(
         required: false,
       },
     },
+    createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
+    bookedBy: { type: mongoose.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

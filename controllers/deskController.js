@@ -2,6 +2,7 @@ import Desk from "../models/DeskModel.js";
 import { StatusCodes } from "http-status-codes";
 
 export const getAllDesks = async (req, res) => {
+  console.log(req);
   const desks = await Desk.find({});
   res.status(StatusCodes.OK).json({ desks });
 };
