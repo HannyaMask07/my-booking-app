@@ -13,14 +13,18 @@ export const loader = async () => {
     return error;
   }
 };
+
+const AllDesksContext = createContext();
 const AllDesks = () => {
   const { data } = useLoaderData();
   return (
-    <>
+    <AllDesksContext.Provider value={{ data }}>
       <SearchContainer />
       <DesksContainer />
-    </>
+    </AllDesksContext.Provider>
   );
 };
+
+export const useAllDesksContext = () => useContext(AllDesksContext);
 
 export default AllDesks;
