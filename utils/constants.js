@@ -27,3 +27,10 @@ export const DESK_SORT_BY = {
   ASCENDING: "Highest",
   DESCENDING: "Lowest",
 };
+
+export const DESK_LOCATION = {
+  SECTOR_A: "Sector A",
+  SECTOR_B: "Sector B",
+  SECTOR_C: "Sector C",
+  SECTOR_D: "Sector D",
+};

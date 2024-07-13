@@ -14,17 +14,18 @@ html {
 
 :root {
   /* colors */
-  --primary-50: #e0fcff;
-  --primary-100: #bef8fd;
-  --primary-200: #87eaf2;
-  --primary-300: #54d1db;
-  --primary-400: #38bec9;
-  --primary-500: #2cb1bc;
-  --primary-600: #14919b;
-  --primary-700: #0e7c86;
-  --primary-800: #0a6c74;
-  --primary-900: #044e54;
+  --primary-50: #ffebee; /* Light red */
+  --primary-100: #ffcdd2; /* Lighter red */
+  --primary-200: #ef9a9a; /* Light red */
+  --primary-300: #e57373; /* Red */
+  --primary-400: #ef5350; /* Warm red */
+  --primary-500: #f44336; /* Standard red */
+  --primary-600: #e53935; /* Slightly darker red */
+  --primary-700: #d32f2f; /* Dark red */
+  --primary-800: #c62828; /* Darker red */
+  --primary-900: #b71c1c; /* Darkest red */
 
+  /* other color definitions remain unchanged */
   /* grey */
   --grey-50: #f8fafc;
   --grey-100: #f1f5f9;
@@ -36,7 +37,7 @@ html {
   --grey-700: #334155;
   --grey-800: #1e293b;
   --grey-900: #0f172a;
-  /* rest of the colors */
+
   --black: #222;
   --white: #fff;
   --red-light: #f8d7da;
@@ -46,7 +47,6 @@ html {
 
   --small-text: 0.875rem;
   --extra-small-text: 0.7em;
-  /* rest of the vars */
 
   --border-radius: 0.25rem;
   --letter-spacing: 1px;
@@ -55,7 +55,8 @@ html {
   --fixed-width: 600px;
   --fluid-width: 90vw;
   --nav-height: 6rem;
-  /* box shadow*/
+
+  /* box shadow */
   --shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -63,8 +64,8 @@ html {
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  /* DARK MODE */
 
+  /* DARK MODE */
   --dark-mode-bg-color: #333;
   --dark-mode-text-color: #f0f0f0;
   --dark-mode-bg-secondary-color: #3f3f3f;
