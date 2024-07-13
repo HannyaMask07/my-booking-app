@@ -18,6 +18,7 @@ import { action as registerAction } from "./pages/Register";
 import { action as loginAction } from "./pages/Login";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
 import { action as addDeskAction } from "./pages/AddDesk";
+import { loader as AllDesksLoader } from "./pages/AllDesks";
 
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") == "true";
@@ -63,6 +64,7 @@ const router = createBrowserRouter([
           {
             path: "all-desks",
             element: <AllDesks />,
+            loader: AllDesksLoader,
           },
           {
             path: "profile",

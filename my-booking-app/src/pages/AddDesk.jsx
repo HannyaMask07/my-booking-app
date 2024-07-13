@@ -21,7 +21,7 @@ export const action = async ({ request }) => {
     toast.success("Desk added successfully");
     return redirect("all-desks");
   } catch (error) {
-    toast.error(error?.reponse?.data?.msg);
+    toast.error(error?.response?.data?.msg);
     return error;
   }
 };
