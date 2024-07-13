@@ -10,6 +10,22 @@ import { Form, useNavigation, redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch";
 
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const amenities = formData.getAll("amenities");
+  const data = Object.fromEntries(formData);
+  data.amenities = amenities;
+
+  try {
+    await customFetch.post("/desks", data);
+    toast.success("Desk added successfully");
+    return redirect("all-desks");
+  } catch (error) {
+    toast.error(error?.reponse?.data?.msg);
+    return error;
+  }
+};
+
 const AddDesk = () => {
   const { user } = useOutletContext();
   const navigation = useNavigation();
@@ -31,12 +47,6 @@ const AddDesk = () => {
             name="location"
             defaultValue={DESK_LOCATION.SECTOR_A}
             list={Object.values(DESK_LOCATION)}
-          />
-          <FormRowSelect
-            labelText="Desk Type"
-            name="type"
-            defaultValue={DESK_TYPE.STANDARD}
-            list={Object.values(DESK_TYPE)}
           />
           <FormRowSelect
             labelText="Desk Amenities"
