@@ -3,9 +3,9 @@ import User from "../models/UserModel.js";
 import Desk from "../models/DeskModel.js";
 
 export const getCurrentUser = async (req, res) => {
-  const user = await User.findOne({ _id: req.user.userId });
-  const userWithoutPassword = user.toJSON();
-  res.status(StatusCodes.OK).json({ userWithoutPassword });
+  const userWithoutPassword = await User.findOne({ _id: req.user.userId });
+  const user = userWithoutPassword.toJSON();
+  res.status(StatusCodes.OK).json({ user });
 };
 export const getApplicationStats = async (req, res) => {
   const users = await User.countDocuments();

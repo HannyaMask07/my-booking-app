@@ -16,11 +16,14 @@ export const DESK_AMENITIES = {
   KEYBOARD: "Keyboard",
   TWO_MONITORS: "Two Monitors",
   LAPTOP_STAND: "Laptop Stand",
+  HEADSET: "Headset",
+  PRINTER: "Printer",
+  DOCKING_STATION: "Docking station",
 };
 
 export const DESK_SORT_BY = {
   BOOKED_FIRST: "Booked",
   AVAILABLE_FIRST: "Available",
-  ASCENDING: "Ascending",
-  DESCENDING: "Descending",
+  ASCENDING: "Highest",
+  DESCENDING: "Lowest",
 };

@@ -2,9 +2,43 @@ import Desk from "../models/DeskModel.js";
 import { StatusCodes } from "http-status-codes";
 
 export const getAllDesks = async (req, res) => {
-  console.log(req.user);
-  const desks = await Desk.find({});
-  res.status(StatusCodes.OK).json({ desks });
+  const { search, status, amenities, type, sort } = req.query;
+  const queryObject = {};
+
+  if (search) {
+    queryObject.$or = [{ deskNumber: { $regex: search, $options: "i" } }];
+  }
+  if (amenities && amenities !== "all") {
+    queryObject.amenities = amenities;
+  }
+  if (status && status !== "all") {
+    queryObject.status = status;
+  }
+  if (type && type !== "all") {
+    queryObject.type = type;
+  }
+
+  const sortOptions = {
+    Highest: { deskNumber: -1 }, // Sort in descending order
+    Lowest: { deskNumber: 1 }, // Sort in ascending order
+  };
+
+  // Extract the sort key from the query or default to 'Lowest'
+  const sortKey = sortOptions[sort] || sortOptions.Lowest;
+
+  // Fetch the desks
+  let desks = await Desk.find(queryObject);
+
+  // Sort desks based on the numeric part of the desk number
+  desks = desks.sort((a, b) => {
+    const numA = parseInt(a.deskNumber.replace(/\D/g, ""), 10);
+    const numB = parseInt(b.deskNumber.replace(/\D/g, ""), 10);
+    return sortKey.deskNumber === 1 ? numA - numB : numB - numA;
+  });
+
+  const totalDesks = await Job.countDocuments(queryObject);
+
+  res.status(StatusCodes.OK).json({ totalDesks, desks });
 };
 
 export const getUserBookedDesk = async (req, res) => {
