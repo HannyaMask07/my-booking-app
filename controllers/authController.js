@@ -20,7 +20,7 @@ export const login = async (req, res) => {
   const isValidUser =
     user && (await comparePassword(req.body.password, user.password));
 
-  if (!isValidUser) throw new UnauthenticatedError("invalid credentials");
+  if (!isValidUser) throw new UnauthenticatedError("Invalid credentials");
 
   const token = createJWT({ userId: user._id, role: user.role });
   const oneDay = 1000 * 60 * 60 * 24;

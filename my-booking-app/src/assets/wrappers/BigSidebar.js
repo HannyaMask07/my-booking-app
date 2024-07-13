@@ -1,16 +1,16 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Wrapper = styled.aside`
   display: none;
-  @media (min-width: 992px) {
+  @media (min-width: 1100px) {
     display: block;
     box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.1);
     .sidebar-container {
       background: var(--background-secondary-color);
       min-height: 100vh;
       height: 100%;
-      width: 250px;
-      margin-left: -250px;
+      width: 300px;
+      margin-left: -300px;
       transition: margin-left 0.3s ease-in-out;
     }
     .content {
