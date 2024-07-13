@@ -4,7 +4,7 @@ import { DESK_STATUS, DESK_TYPE, DESK_AMENITIES } from "../utils/constants.js";
 const DeskSchema = new mongoose.Schema(
   {
     deskNumber: {
-      type: String,
+      type: Number,
       required: true,
     },
     location: {

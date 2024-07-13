@@ -19,26 +19,28 @@ export const getAllDesks = async (req, res) => {
   }
 
   const sortOptions = {
-    Highest: { deskNumber: -1 }, // Sort in descending order
-    Lowest: { deskNumber: 1 }, // Sort in ascending order
+    Highest: { deskNumber: -1 },
+    Lowest: { deskNumber: 1 },
   };
 
-  // Extract the sort key from the query or default to 'Lowest'
   const sortKey = sortOptions[sort] || sortOptions.Lowest;
 
-  // Fetch the desks
-  let desks = await Desk.find(queryObject);
+  //setup pagination
 
-  // Sort desks based on the numeric part of the desk number
-  desks = desks.sort((a, b) => {
-    const numA = parseInt(a.deskNumber.replace(/\D/g, ""), 10);
-    const numB = parseInt(b.deskNumber.replace(/\D/g, ""), 10);
-    return sortKey.deskNumber === 1 ? numA - numB : numB - numA;
-  });
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
 
-  const totalDesks = await Job.countDocuments(queryObject);
+  const desks = await Desk.find(queryObject)
+    .sort(sortKey)
+    .skip(skip)
+    .limit(limit);
 
-  res.status(StatusCodes.OK).json({ totalDesks, desks });
+  const totalDesks = await Desk.countDocuments(queryObject);
+  const numOfPages = Math.ceil(totalDesks / limit);
+  res
+    .status(StatusCodes.OK)
+    .json({ totalDesks, numOfPages, currentPage: page, desks });
 };
 
 export const getUserBookedDesk = async (req, res) => {
