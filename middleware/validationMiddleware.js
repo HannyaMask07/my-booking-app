@@ -35,16 +35,16 @@ export const validateIdParam = withValidationErrors([
 ]);
 
 export const validateRegisterInput = withValidationErrors([
-  body("name").notEmpty().withMessage("name is required"),
+  body("name").notEmpty().withMessage("Name is required"),
   body("email")
     .notEmpty()
-    .withMessage("email is required")
+    .withMessage("Email is required")
     .isEmail()
-    .withMessage("invalid email format")
+    .withMessage("Invalid email format")
     .custom(async (email) => {
       const user = await User.findOne({ email });
       if (user) {
-        throw new BadRequestError("email already exist");
+        throw new BadRequestError("Email already exist");
       }
     }),
   body("password")
@@ -67,18 +67,18 @@ export const validateLoginInput = withValidationErrors([
 ]);
 
 export const validateUpdateUserInput = withValidationErrors([
-  body("name").notEmpty().withMessage("name is required"),
+  body("name").notEmpty().withMessage("Name is required"),
   body("email")
     .notEmpty()
-    .withMessage("email is required")
+    .withMessage("Email is required")
     .isEmail()
-    .withMessage("invalid email format")
+    .withMessage("Invalid email format")
     .custom(async (email, { req }) => {
       const user = await User.findOne({ email });
       if (user && user._id.toString() !== req.user.userId) {
-        throw new BadRequestError("email already exist");
+        throw new BadRequestError("Email already exist");
       }
     }),
-  body("location").notEmpty().withMessage("location is required"),
-  body("lastName").notEmpty().withMessage("last name is required"),
+  body("location").notEmpty().withMessage("Location is required"),
+  body("lastName").notEmpty().withMessage("Last name is required"),
 ]);
