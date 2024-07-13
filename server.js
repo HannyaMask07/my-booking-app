@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 //routers
 import deskRouter from "./routes/deskRouter.js";
 import authRouter from "./routes/authRouter.js";
+import userRouter from "./routes/userRouter.js";
 
 //middleware
 import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/desks", authenticateUser, deskRouter);
+app.use("/api/v1/users", authenticateUser, userRouter);
 app.use("/api/v1/auth", authRouter);
 
 app.use("*", (req, res) => {
