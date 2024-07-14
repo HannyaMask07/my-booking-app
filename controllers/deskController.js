@@ -85,20 +85,12 @@ export const BookDesk = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Desk is not available for booking" });
     }
+    req.body.bookedBy = req.user.userId;
+    req.body.status = "booked";
 
-    const updatedDesk = await Desk.findByIdAndUpdate(
-      req.params.id,
-      {
-        status: "booked",
-        bookedBy: req.user.userId,
-        currentBooking: {
-          userId: req.user.userId,
-          startTime: new Date(), // Set current time as start time
-          endTime: req.body.endTime || null, // Optionally set end time if provided
-        },
-      },
-      { new: true }
-    );
+    const updatedDesk = await Desk.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     if (!updatedDesk) {
       return res

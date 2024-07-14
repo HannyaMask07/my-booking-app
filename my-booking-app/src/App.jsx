@@ -11,6 +11,8 @@ import {
   AllDesks,
   Profile,
   Admin,
+  BookDesk,
+  UserBookings,
 } from "./pages";
 
 import { action as registerAction } from "./pages/Register";
@@ -19,6 +21,8 @@ import { action as loginAction } from "./pages/Login";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
 import { action as addDeskAction } from "./pages/AddDesk";
 import { loader as AllDesksLoader } from "./pages/AllDesks";
+import { action as bookDeskAction } from "./pages/BookDesk";
+import { loader as bookDesksLoader } from "./pages/BookDesk";
 
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") == "true";
@@ -73,6 +77,16 @@ const router = createBrowserRouter([
           {
             path: "admin",
             element: <Admin />,
+          },
+          {
+            path: "book-desk/:id",
+            element: <BookDesk />,
+            loader: bookDesksLoader,
+            action: bookDeskAction,
+          },
+          {
+            path: "user-bookings",
+            element: <UserBookings />,
           },
         ],
       },

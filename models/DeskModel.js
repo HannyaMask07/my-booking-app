@@ -38,19 +38,13 @@ const DeskSchema = new mongoose.Schema(
         DESK_AMENITIES.SINGLE_MONITOR
       ),
     },
-    currentBooking: {
-      userId: {
-        type: String,
-        required: false,
-      },
-      startTime: {
-        type: Date,
-        required: false,
-      },
-      endTime: {
-        type: Date,
-        required: false,
-      },
+    startTime: {
+      type: Date,
+      required: false,
+    },
+    endTime: {
+      type: Date,
+      required: false,
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
