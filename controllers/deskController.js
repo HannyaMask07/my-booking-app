@@ -109,6 +109,37 @@ export const BookDesk = async (req, res) => {
   }
 };
 
+export const CancelBooking = async (req, res) => {
+  try {
+    // Fetch the current desk document
+    const desk = await Desk.findById(req.params.id);
+
+    if (!desk) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Desk not found" });
+    }
+
+    // Remove the bookedBy, startTime, and endTime fields
+    delete desk.bookedBy;
+    desk.status = "available"; // Set status to available
+    delete desk.startTime;
+    delete desk.endTime;
+
+    // Save the updated desk
+    const updatedDesk = await desk.save();
+
+    res.status(StatusCodes.OK).json({
+      msg: "Desk booking canceled successfully",
+      desk: updatedDesk,
+    });
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: error.message });
+  }
+};
+
 export const createDesk = async (req, res) => {
   const desk = await Desk.create(req.body);
   res.status(StatusCodes.CREATED).json({ desk });

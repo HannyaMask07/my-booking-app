@@ -25,10 +25,9 @@ const Desk = ({
   const startDate = startTime
     ? day(startTime).format("MMM Do, YYYY")
     : "Not booked";
-  const endDate = endTime
-    ? day(startTime).format("MMM Do, YYYY")
-    : "Not booked";
+  const endDate = endTime ? day(endTime).format("MMM Do, YYYY") : "Not booked";
   const [userName, setUserName] = useState("");
+  const [currentUserId, setCurrentUserId] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,6 +46,22 @@ const Desk = ({
 
     fetchUser();
   }, [bookedBy]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await customFetch("/users/current-user"); // Update to your current user endpoint
+        console.log("API Response:", response); // Log the full response
+        const { data } = response;
+        console.log("User Data:", data); // Log the data part of the response
+        setCurrentUserId(data.user._id); // Assuming the user object has a 'name' field
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   return (
     <Wrapper>
@@ -69,13 +84,22 @@ const Desk = ({
           <div className={`status ${status}`}>{status}</div>
           <div className={`status ${type}`}>{type}</div>
         </div>
-        {!bookedBy && (
+        {bookedBy != currentUserId && (
           <footer className="actions">
             <Link to={`../book-desk/${_id}`} className="btn edit-btn">
               Book
             </Link>
           </footer>
         )}
+        {
+          (bookedBy = currentUserId && (
+            <footer className="actions">
+              <Link to={`../book-desk/${_id}`} className="btn edit-btn">
+                Cancel booking
+              </Link>
+            </footer>
+          ))
+        }
       </div>
     </Wrapper>
   );

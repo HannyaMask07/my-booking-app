@@ -9,6 +9,7 @@ import {
   createDesk,
   BookDesk,
   getUserBookedDesk,
+  CancelBooking,
 } from "../controllers/deskController.js";
 import {
   validateDeskInput,
@@ -26,5 +27,7 @@ router
   .delete(validateIdParam, deleteDesk);
 
 router.patch("/:id/book", validateIdParam, BookDesk);
+router.patch("/:id/cancelBooking", validateIdParam, CancelBooking);
+
 
 export default router;

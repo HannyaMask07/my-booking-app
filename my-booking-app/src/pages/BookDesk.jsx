@@ -14,13 +14,15 @@ dayjs.extend(advancedFormat);
 
 export const loader = async ({ params }) => {
   try {
-    const { data } = await customFetch.get(`/desks/${params.id}`);
-    return data;
+    const { data: deskData } = await customFetch.get(`/desks/${params.id}`);
+    const { data: userData } = await customFetch("/users/current-user");
+    return { desk: deskData, user: userData };
   } catch (error) {
     toast.error(error?.response?.data?.msg || "Failed to load desk data");
     return redirect("/dashboard/all-desks");
   }
 };
+
 export const action = async ({ request, params }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
@@ -30,11 +32,12 @@ export const action = async ({ request, params }) => {
     return redirect("/dashboard/user-bookings");
   } catch (error) {
     toast.error(error?.response?.data?.msg || "Failed to book desk");
+    return redirect("/dashboard/all-desks");
   }
 };
 
 function BookDesk() {
-  const { desk } = useLoaderData();
+  const { desk, user } = useLoaderData();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "booking";
   const today = dayjs().format("YYYY-MM-DD");
