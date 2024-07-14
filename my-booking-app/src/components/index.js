@@ -6,3 +6,4 @@ export { default as Navbar } from "./Navbar";
 export { default as FormRowSelect } from "./FormRowSelect";
 export { default as DesksContainer } from "./DesksContainer";
 export { default as SearchContainer } from "./SearchContainer";
+export { default as UserDeskContainer } from "./UserDeskContainer";

@@ -23,7 +23,7 @@ import { action as addDeskAction } from "./pages/AddDesk";
 import { loader as AllDesksLoader } from "./pages/AllDesks";
 import { action as bookDeskAction } from "./pages/BookDesk";
 import { loader as bookDesksLoader } from "./pages/BookDesk";
-
+import { loader as userBookingLoader } from "./pages/UserBookings";
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") == "true";
   document.body.classList.toggle("dark-theme", isDarkTheme);
@@ -87,6 +87,7 @@ const router = createBrowserRouter([
           {
             path: "user-bookings",
             element: <UserBookings />,
+            loader: userBookingLoader,
           },
         ],
       },

@@ -13,20 +13,11 @@ const links = [
     path: ".",
     icon: <FaDesktop />,
   },
-  /*TODO
-    {
-    text: "book desk",
-    path: "book-desk",
-    icon: <FaDesktop />,
-  },
-  */
-  /*TODO
-    {
+  {
     text: "My booking",
-    path: "my-bookings",
+    path: "user-bookings",
     icon: <FaAddressBook />,
   },
-  */
   {
     text: "all desks",
     path: "all-desks",

@@ -18,19 +18,27 @@ const Desk = ({
   status,
   type,
   amenities,
-  currentBooking,
+  startTime,
+  endTime,
   bookedBy,
 }) => {
+  const startDate = startTime
+    ? day(startTime).format("MMM Do, YYYY")
+    : "Not booked";
+  const endDate = endTime
+    ? day(startTime).format("MMM Do, YYYY")
+    : "Not booked";
   const [userName, setUserName] = useState("");
-  const { startTime } = currentBooking || {};
-  const date = startTime ? day(startTime).format("MMM Do, YYYY") : "Not booked";
 
   useEffect(() => {
     const fetchUser = async () => {
       if (bookedBy) {
         try {
-          const { data } = await customFetch(`/users/getUserById/${bookedBy}`);
-          setUserName(data.name); // Assuming the user object has a 'name' field
+          const response = await customFetch(`/users/getUserById/${bookedBy}`);
+          console.log("API Response:", response); // Log the full response
+          const { data } = response;
+          console.log("User Data:", data); // Log the data part of the response
+          setUserName(data.user.name); // Assuming the user object has a 'name' field
         } catch (error) {
           console.error("Error fetching user:", error);
         }
@@ -53,18 +61,21 @@ const Desk = ({
       <div className="content">
         <div className="content-center">
           <DeskInfo icon={<MdDescription />} text={type} />
-          <DeskInfo icon={<FaCalendarAlt />} text={date} />
+          <DeskInfo icon={<FaCalendarAlt />} text={startDate} />
+          {bookedBy && <DeskInfo icon={<FaCalendarAlt />} text={endDate} />}
           {bookedBy && (
             <DeskInfo icon={<GrStatusInfo />} text={`Booked by: ${userName}`} />
           )}
           <div className={`status ${status}`}>{status}</div>
           <div className={`status ${type}`}>{type}</div>
         </div>
-        <footer className="actions">
-          <Link to={`../book-desk/${_id}`} className="btn edit-btn">
-            Book
-          </Link>
-        </footer>
+        {!bookedBy && (
+          <footer className="actions">
+            <Link to={`../book-desk/${_id}`} className="btn edit-btn">
+              Book
+            </Link>
+          </footer>
+        )}
       </div>
     </Wrapper>
   );

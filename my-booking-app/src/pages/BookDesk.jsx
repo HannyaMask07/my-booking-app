@@ -17,7 +17,7 @@ export const loader = async ({ params }) => {
     const { data } = await customFetch.get(`/desks/${params.id}`);
     return data;
   } catch (error) {
-    toast.error(error?.response?.data?.msg);
+    toast.error(error?.response?.data?.msg || "Failed to load desk data");
     return redirect("/dashboard/all-desks");
   }
 };
@@ -29,7 +29,7 @@ export const action = async ({ request, params }) => {
     toast.success("Desk booked successfully");
     return redirect("/dashboard/user-bookings");
   } catch (error) {
-    toast.error(error?.response?.data?.msg);
+    toast.error(error?.response?.data?.msg || "Failed to book desk");
   }
 };
 
