@@ -2,7 +2,7 @@ export { default as AddDesk } from "./AddDesk";
 export { default as Admin } from "./Admin";
 export { default as AllDesks } from "./AllDesks";
 export { default as DashboardLayout } from "./DashboardLayout";
-export { default as DeleteDesk } from "./DeleteDesk";
+export { default as DeleteDesk } from "./CancelBooking";
 export { default as EditDesk } from "./EditDesk";
 export { default as Error } from "./Error";
 export { default as HomeLayout } from "./HomeLayout";

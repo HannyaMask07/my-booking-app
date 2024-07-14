@@ -121,10 +121,10 @@ export const CancelBooking = async (req, res) => {
     }
 
     // Remove the bookedBy, startTime, and endTime fields
-    delete desk.bookedBy;
+    desk.bookedBy = undefined; // Or use null if your schema allows it
+    desk.startTime = undefined;
+    desk.endTime = undefined;
     desk.status = "available"; // Set status to available
-    delete desk.startTime;
-    delete desk.endTime;
 
     // Save the updated desk
     const updatedDesk = await desk.save();

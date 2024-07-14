@@ -46,7 +46,7 @@ function BookDesk() {
   return (
     <Wrapper>
       <WrapperDetail>
-        <h4 className="form-title">Book desk</h4>
+        <h4 className="form-title">Cancel booking</h4>
         <header>
           <div className="main-icon">
             <PiDesktopBold />
