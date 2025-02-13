@@ -1,9 +1,5 @@
 # Dokumentacja Techniczna - DeskBooker
 
-## 1. Wstęp
-
-# Dokumentacja aplikacji DeskBooker
-
 ## 1. Ogólny przegląd architektury
 
 Aplikacja **DeskBooker** to system rezerwacji biurek, który składa się z trzech głównych warstw:
