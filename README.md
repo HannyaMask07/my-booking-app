@@ -137,7 +137,7 @@ Aby skonfigurować połączenie z bazą danych MongoDB, należy wykonać następ
    PORT=5100
    ```
 
-2. **Zainstalowanie zależnych pakietów**
+2. **Zainstalowanie zależnych pakietów (jeśli nie zainstalowały się przy setupie)**
 
    ```sh
    npm install mongoose dotenv
