@@ -609,7 +609,207 @@ Authorization: Bearer <JWT_TOKEN>
 - **Middleware** waliduje dane i zabezpiecza dostęp.
 - **Express.js** obsługuje komunikację między klientem a serwerem.
 
-**Dzięki temu backend jest modularny, przejrzysty i łatwy do rozwijania! 🚀**
+## 4. Obsługa błędów, Middleware i Utils
+
+### 4.1 Obsługa błędów (errors/)
+
+Aby zapewnić spójne i przejrzyste zarządzanie błędami w aplikacji, w folderze `errors/` zdefiniowano dedykowane klasy błędów. Każdy błąd dziedziczy po klasie `Error`, a jego kod statusu HTTP pochodzi z biblioteki `http-status-codes`.
+
+#### 4.1.1 Klasy błędów – `customErrors.js`
+
+Plik `customErrors.js` zawiera klasy błędów używane w aplikacji:
+
+| Klasa                  | Status HTTP        | Opis                                 |
+| ---------------------- | ------------------ | ------------------------------------ |
+| `NotFoundError`        | `404 Not Found`    | Zasób nie został znaleziony          |
+| `BadRequestError`      | `400 Bad Request`  | Niepoprawne zapytanie                |
+| `UnauthenticatedError` | `401 Unauthorized` | Brak uwierzytelnienia użytkownika    |
+| `UnauthorizedError`    | `403 Forbidden`    | Brak uprawnień do wykonania operacji |
+
+**Przykład użycia:**
+
+```javascript
+import { NotFoundError } from "../errors/customErrors.js";
+
+if (!desk) {
+  throw new NotFoundError("Desk not found");
+}
+```
+
+### 4.2 Middleware (`middleware/`)
+
+Middleware obsługuje funkcje pośrednie, takie jak uwierzytelnianie, autoryzacja, obsługa błędów i walidacja danych wejściowych.
+
+#### 4.2.1 Middleware autoryzacji – `authMiddleware.js`
+
+Obsługuje uwierzytelnianie użytkownika za pomocą JWT oraz autoryzację dostępu na podstawie ról.
+
+| Funkcja                | Opis                                                |
+| ---------------------- | --------------------------------------------------- |
+| `authenticateUser`     | Weryfikuje token JWT użytkownika                    |
+| `authorizePermissions` | Sprawdza, czy użytkownik ma odpowiednie uprawnienia |
+
+**Przykład użycia:**
+
+```javascript
+import { authenticateUser } from "../middleware/authMiddleware.js";
+
+router.get("/protected-route", authenticateUser, (req, res) => {
+  res.json({ msg: "Dostęp przyznany" });
+});
+```
+
+#### 4.2.2 Obsługa błędów – `errorHandlerMiddleware.js`
+
+Centralny middleware do obsługi błędów, który loguje je i zwraca spójną odpowiedź API.
+
+**Kod:**
+
+```javascript
+import { StatusCodes } from "http-status-codes";
+
+const errorHandlerMiddleware = (err, req, res, next) => {
+  console.log(err);
+  const statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+  const msg =
+    err.message || "something went wrong, try again at different time";
+  res.status(statusCode).json({ msg });
+};
+
+export default errorHandlerMiddleware;
+```
+
+**Przykład użycia:**
+
+```javascript
+app.use(errorHandlerMiddleware);
+```
+
+#### 4.2.3 Middleware walidacji – `validationMiddleware.js`
+
+#### 4.2.3 Middleware walidacji – `validationMiddleware.js`
+
+Obsługuje walidację danych wejściowych za pomocą `express-validator`.
+
+| Metoda walidacji          | Opis                                                     |
+| ------------------------- | -------------------------------------------------------- |
+| `validateDeskInput`       | Sprawdza, czy podano lokalizację biurka                  |
+| `validateIdParam`         | Weryfikuje poprawność ID i sprawdza, czy biurko istnieje |
+| `validateRegisterInput`   | Weryfikuje dane rejestracyjne użytkownika                |
+| `validateLoginInput`      | Sprawdza poprawność danych logowania                     |
+| `validateUpdateUserInput` | Weryfikuje poprawność danych aktualizacji profilu        |
+| `validateBookingInput`    | Sprawdza poprawność danych rezerwacji                    |
+
+**Przykład walidacji rezerwacji biurka:**
+
+```javascript
+export const validateBookingInput = withValidationErrors([
+  body("startTime")
+    .notEmpty()
+    .withMessage("Start time is required")
+    .isISO8601()
+    .withMessage("Invalid date format"),
+
+  body("endTime")
+    .notEmpty()
+    .withMessage("End time is required")
+    .isISO8601()
+    .withMessage("Invalid date format")
+    .custom((endTime, { req }) => {
+      const startTime = req.body.startTime;
+      if (!startTime) {
+        throw new BadRequestError(
+          "Start time must be provided before checking end time"
+        );
+      }
+      if (new Date(endTime) <= new Date(startTime)) {
+        throw new BadRequestError("End time must be later than start time");
+      }
+      return true;
+    }),
+]);
+```
+
+**Przykład użycia:**
+
+```javascript
+router.patch("/:id/book", validateIdParam, validateBookingInput, BookDesk);
+```
+
+**Przykład walidacji Rejestracji w `validationMiddleware.js`:**
+
+```javascript
+export const validateRegisterInput = withValidationErrors([
+  body("name").notEmpty().withMessage("Name is required"),
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Invalid email format")
+    .custom(async (email) => {
+      const user = await User.findOne({ email });
+      if (user) {
+        throw new BadRequestError("Email already exist");
+      }
+    }),
+  body("password")
+    .notEmpty()
+    .withMessage("password is required")
+    .isLength({ min: 4 })
+    .withMessage("password must be at least 4 characters long"),
+  body("location").notEmpty().withMessage("location is required"),
+  body("lastName").notEmpty().withMessage("last name is required"),
+]);
+```
+
+**Przykład użycia:**
+
+```javascript
+router.post("/register", validateRegisterInput, register);
+```
+
+### 4.3 Narzędzia (`utils/`)
+
+#### 4.3.1 Narzędzia do haseł – `passwordUtils.js`
+
+Obsługuje hashowanie haseł oraz ich porównywanie za pomocą `bcryptjs`.
+
+| Funkcja           | Opis                                   |
+| ----------------- | -------------------------------------- |
+| `hashPassword`    | Haszuje podane hasło                   |
+| `comparePassword` | Porównuje podane hasło z zaszyfrowanym |
+
+**Przykład użycia:**
+
+```javascript
+const hashedPassword = await hashPassword("mypassword");
+```
+
+#### 4.3.2 Narzędzia do tokenów – `tokenUtils.js`
+
+Obsługuje tworzenie i weryfikację tokenów JWT.
+
+| Funkcja     | Opis                             |
+| ----------- | -------------------------------- |
+| `createJWT` | Tworzy token JWT                 |
+| `verifyJWT` | Weryfikuje poprawność tokena JWT |
+
+**Przykład użycia:**
+
+```javascript
+const token = createJWT({ userId: user._id });
+const decoded = verifyJWT(token);
+```
+
+### 4.4 Podsumowanie
+
+- `errors/` zawiera klasy błędów, zapewniając czytelną obsługę wyjątków.
+- `middleware/` obsługuje autoryzację, walidację i błędy.
+- `utils/` dostarcza funkcje pomocnicze do obsługi JWT i haseł.
+
+Dzięki temu backend jest modularny, bezpieczny i dobrze zarządzany! 🚀
+
+
 
 
 
