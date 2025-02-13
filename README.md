@@ -987,6 +987,98 @@ my-booking-app/
 ```
 
 ---
+## 3. Struktura i funkcjonalność pliku `App.jsx`
+
+Plik `App.jsx` pełni kluczową rolę w zarządzaniu routami aplikacji oraz definiowaniu jej układu. Korzysta z **React Router** do obsługi nawigacji, a także z dynamicznych loaderów i akcji do obsługi danych.
+
+### **Struktura routingu w `App.jsx`**
+
+```javascript
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  HomeLayout,
+  Landing,
+  //[...]
+  UserBookings,
+} from "./pages";
+
+import { action as registerAction } from "./pages/Register";
+import { action as loginAction } from "./pages/Login";
+//[...]
+import { loader as bookDesksLoader } from "./pages/BookDesk";
+import { loader as userBookingLoader } from "./pages/UserBookings";
+
+export const checkDefaultTheme = () => {
+  const isDarkTheme = localStorage.getItem("darkTheme") == "true";
+  document.body.classList.toggle("dark-theme", isDarkTheme);
+  return isDarkTheme;
+};
+
+checkDefaultTheme();
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomeLayout />, 
+    errorElement: <Error />, 
+    children: [
+      {
+        index: true,
+        element: <Landing />,
+      },
+ //[...]
+        path: "dashboard",
+        element: <DashboardLayout />, 
+        loader: dashboardLoader,
+        children: [
+          {
+            index: true,
+            element: <AddDesk />,
+            action: addDeskAction,
+          },
+  //[...]
+            path: "book-desk/:id",
+            element: <BookDesk />,
+            loader: bookDesksLoader,
+            action: bookDeskAction,
+          },
+          {
+            path: "user-bookings",
+            element: <UserBookings />,
+            loader: userBookingLoader,
+          },
+        ],
+      },
+    ],
+  },
+]);
+
+const App = () => {
+  return <RouterProvider router={router} />;
+};
+
+export default App;
+```
+
+### **Funkcjonalność `App.jsx`**
+
+1. **Obsługa routingu** – wykorzystuje `createBrowserRouter`, aby stworzyć dynamiczny system nawigacji w aplikacji.
+2. **Podział na layouty i podstrony** – `HomeLayout` służy jako główny kontener dla stron publicznych, a `DashboardLayout` dla użytkowników zalogowanych.
+3. **Dynamiczne ładowanie danych** – niektóre strony używają loaderów (`dashboardLoader`, `AllDesksLoader`, `userBookingLoader`), co pozwala na pobranie danych przed wyrenderowaniem komponentów.
+4. **Akcje dla formularzy** – rejestracja, logowanie oraz rezerwacja biurek wykorzystują akcje (`registerAction`, `loginAction`, `bookDeskAction`), umożliwiając obsługę formularzy bez konieczności obsługi zdarzeń w samych komponentach.
+5. **Obsługa błędów** – każda ścieżka posiada `errorElement`, który wyświetla stronę błędu w przypadku problemów z nawigacją.
+6. **Zarządzanie motywem** – `checkDefaultTheme()` sprawdza zapisane ustawienie trybu ciemnego i stosuje je przy uruchomieniu aplikacji.
+
+---
+
+## 4. Jak `App.jsx` współdziała z innymi komponentami?
+
+1. Użytkownik odwiedza stronę główną `/`, gdzie `HomeLayout` renderuje `Landing.jsx`.
+2. Jeśli chce się zalogować, przechodzi do `/login`, gdzie `Login.jsx` obsługuje akcję `loginAction`.
+3. Po zalogowaniu użytkownik zostaje przekierowany do `/dashboard`, gdzie `DashboardLayout.jsx` ładuje odpowiednie podstrony.
+4. Jeśli użytkownik chce zarezerwować biurko, przechodzi do `/book-desk/:id`, gdzie `BookDesk.jsx` pobiera dane biurka i obsługuje akcję `bookDeskAction`.
+
+---
 
 ## Wykorzystanie Wrapperów, Komponentów i Stron w DeskBooker
 
