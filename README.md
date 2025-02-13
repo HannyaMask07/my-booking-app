@@ -330,7 +330,7 @@ Modele `DeskModel.js` odwołują się do tych wartości w polach `status`, `type
 
 ---
 
-# **Backend – Kontrolery i Routy**
+# **Backend**
 
 ## **3.1 Struktura backendu**
 Backend aplikacji **DeskBooker** został zbudowany w oparciu o **Express.js** i działa jako **REST API** obsługujące operacje CRUD na użytkownikach i biurkach.  
