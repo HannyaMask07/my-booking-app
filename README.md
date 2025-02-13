@@ -946,6 +946,256 @@ Plik `server.js`:
 - Podłącza aplikację do MongoDB.
 - Zapewnia globalną obsługę błędów.
 
+# Frontend Dokumentacja - DeskBooker
+
+## 1. Wstęp
+
+### **Opis technologii**
+
+Frontend aplikacji DeskBooker został zbudowany przy użyciu **React.js** w połączeniu z **Vite** jako narzędziem do budowania. Główne technologie używane w aplikacji:
+
+- **React.js** – biblioteka do budowy interfejsu użytkownika.
+- **React Router** – obsługa nawigacji i routingu w aplikacji.
+- **React Query** – zarządzanie stanem aplikacji i fetchowanie danych z API.
+- **Styled Components** – stylizacja komponentów przy użyciu CSS-in-JS.
+- **ESLint & Prettier** – narzędzia do lintingu i formatowania kodu.
+
+Aplikacja korzysta z architektury komponentowej, gdzie każdy element UI jest podzielony na małe, reużywalne komponenty React.
+
+---
+
+## 2. Struktura katalogów
+
+```plaintext
+my-booking-app/
+│── node_modules/             # Zależności projektu
+│── public/                   # Publiczne zasoby aplikacji
+│── src/                      # Główny katalog kodu źródłowego
+│   │── assets/               # Zasoby statyczne
+│   │   ├── css/              # Pliki stylów
+│   │   │   ├── index.css     # Główny plik stylów
+│   │   ├── images/           # Obrazy
+│   │   ├── wrappers/         # Niestandardowe wrappery komponentów
+│   │── components/           # Komponenty interfejsu użytkownika
+│   │── pages/                # Widoki stron aplikacji
+│   │── utils/                # Narzędzia pomocnicze
+│   │── App.jsx               # Główny komponent aplikacji
+│   │── main.jsx              # Punkt wejściowy aplikacji
+│── index.html                # Główny plik HTML aplikacji
+│── package.json              # Zależności i konfiguracja frontendu
+│── vite.config.js            # Konfiguracja Vite
+```
+
+---
+
+## 3. Wrappery i Stylizacja
+
+**Struktura wrapperów**
+
+### **Wrappery – `src/rappers`**
+| Nazwa Wrappera | Opis |
+|----------------|-----------------|
+| BigSidebar.js | Wrapper dla dużego paska bocznego |
+| ChartsContainer.js | Wrapper dla kontenera wykresów |
+| Dashboard.js | Wrapper dla głównego panelu użytkownika |
+| DashboardFormPage.js | Wrapper dla formularzy w panelu |
+| Desk.js | Wrapper widoku biurka |
+| DeskContainer.js | Wrapper kontenera biurek |
+| DeskInfo.js | Wrapper dla szczegółowych informacji o biurku |
+| ErrorPage.js | Wrapper strony błędu |
+| LandingPage.js | Wrapper strony głównej |
+| LogoutContainer.js | Wrapper dla kontenera wylogowania |
+| Navbar.js | Wrapper paska nawigacyjnego |
+| PageBtnContainer.js | Wrapper kontenera przycisków paginacji |
+| RegisterAndLoginPage.js | Wrapper stron rejestracji i logowania |
+| SmallSidebar.js | Wrapper dla małego paska bocznego |
+| StatItem.js | Wrapper dla pojedynczego elementu statystyk |
+| StatsContainer.js | Wrapper dla kontenera statystyk |
+| Testing.js | Wrapper testowy |
+| ThemeToggle.js | Wrapper dla przełącznika motywu |
+
+### **Desk.js**
+
+Przykład: **Desk.js** to wrapper dla biurek, który wykorzystuje **Styled Components** do zapewnienia stylizacji.
+
+```javascript
+import styled from "styled-components";
+
+const Wrapper = styled.article`
+  background: var(--background-secondary-color);
+  border-radius: var(--border-radius);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  box-shadow: var(--shadow-2);
+  
+  header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--grey-100);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+
+  .main-icon {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    background: var(--primary-500);
+    border-radius: var(--border-radius);
+  }
+`;
+
+export default Wrapper;
+```
+
+---
+
+## 4. Komponenty UI
+
+**Struktura komponentów UI**
+
+### **Komponenty – `src/components`**
+| Nazwa Komponentu | Opis |
+|------------------|-----------------|
+| BigSidebar.jsx | Komponent dużego paska bocznego |
+| Desk.jsx | Komponent pojedynczego biurka |
+| DeskInfo.jsx | Komponent informacji o biurku |
+| DesksContainer.jsx | Komponent kontenera biurek |
+| FormRow.jsx | Komponent wiersza formularza |
+| FormRowSelect.jsx | Komponent formularza z wyborem |
+| index.js | Eksport komponentów |
+| Logo.jsx | Komponent logotypu aplikacji |
+| LogoutContainer.jsx | Komponent przycisku wylogowania |
+| Navbar.jsx | Komponent paska nawigacyjnego |
+| NavLinks.jsx | Komponent linków nawigacyjnych |
+| SearchContainer.jsx | Komponent wyszukiwarki |
+| SmallSidebar.jsx | Komponent małego paska bocznego |
+| ThemeToggle.jsx | Komponent przełącznika motywu |
+| UserDeskContainer.jsx | Komponent kontenera biurek użytkownika |
+
+### **Desk.jsx**
+
+Komponent **Desk** odpowiada za wyświetlanie pojedynczego biurka i jego szczegółów.
+
+```javascript
+import { useEffect, useState } from "react";
+import { PiDesktopBold } from "react-icons/pi";
+import { Link } from "react-router-dom";
+import Wrapper from "../assets/wrappers/Desk";
+import customFetch from "../utils/customFetch";
+
+const Desk = ({ _id, location, status, deskNumber, bookedBy }) => {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (bookedBy) {
+        const response = await customFetch(`/users/getUserById/${bookedBy}`);
+        setUserName(response.data.user.name);
+      }
+    };
+    fetchUser();
+  }, [bookedBy]);
+
+  return (
+    <Wrapper>
+      <header>
+        <div className="main-icon">
+          <PiDesktopBold />
+        </div>
+        <h5>{location} #{deskNumber}</h5>
+      </header>
+      <div className="content">
+        {bookedBy && <p>Booked by: {userName}</p>}
+        <div>Status: {status}</div>
+        <Link to={`/book-desk/${_id}`} className="btn">Book</Link>
+      </div>
+    </Wrapper>
+  );
+};
+
+export default Desk;
+```
+
+---
+
+## 5. Strony aplikacji
+
+**Struktura stron w aplikacji**
+
+### **Strony – `src/pages`**
+| Nazwa Strony | Opis |
+|-------------|-----------------|
+| AddDesk.jsx | Strona dodawania biurka |
+| Admin.jsx | Panel administratora |
+| AllDesks.jsx | Strona wyświetlania wszystkich biurek |
+| BookDesk.jsx | Strona rezerwacji biurka |
+| CancelBooking.jsx | Strona anulowania rezerwacji |
+| DashboardLayout.jsx | Layout strony panelu użytkownika |
+| EditDesk.jsx | Strona edycji biurka |
+| Error.jsx | Strona błędu |
+| HomeLayout.jsx | Layout strony głównej |
+| Landing.jsx | Strona główna aplikacji |
+| Login.jsx | Strona logowania |
+| Profile.jsx | Strona profilu użytkownika |
+| Register.jsx | Strona rejestracji |
+| Stats.jsx | Strona statystyk |
+| UserBookings.jsx | Strona rezerwacji użytkownika |
+
+### **AllDesks.jsx**
+
+Strona **AllDesks** wyświetla listę wszystkich dostępnych biurek.
+
+```javascript
+import customFetch from "../utils/customFetch";
+import { useLoaderData } from "react-router-dom";
+
+export const loader = async () => {
+  const { data } = await customFetch.get("/desks");
+  return { data };
+};
+
+const AllDesks = () => {
+  const { data } = useLoaderData();
+  return (
+    <div>
+      {data.map(desk => (
+        <Desk key={desk._id} {...desk} />
+      ))}
+    </div>
+  );
+};
+
+export default AllDesks;
+```
+
+---
+
+## 6. Zarządzanie danymi
+
+**Utils – `src/utils`**
+| Nazwa Pliku | Opis |
+|------------|-----------------|
+| customFetch.js | Wrapper funkcji do obsługi API |
+| links.jsx | Konfiguracja linków nawigacyjnych |
+
+### **customFetch.js**
+
+Obsługuje żądania HTTP do API.
+
+```javascript
+import axios from "axios";
+
+const customFetch = axios.create({
+  baseURL: "/api/v1",
+});
+
+export default customFetch;
+```
+
+---
+
 
 ## **Podsumowanie**
 
