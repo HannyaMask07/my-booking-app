@@ -330,9 +330,172 @@ Modele `DeskModel.js` odwołują się do tych wartości w polach `status`, `type
 
 ---
 
-## 3. Backend - Express.js
+# **Backend – Kontrolery i Routy**
 
-(... dalsza część dokumentacji ...)
+## **3.1 Struktura backendu**
+Backend aplikacji **DeskBooker** został zbudowany w oparciu o **Express.js** i działa jako **REST API** obsługujące operacje CRUD na użytkownikach i biurkach.  
+
+### **Główne moduły backendu:**
+- **Kontrolery (`controllers/`)** – obsługują logikę biznesową aplikacji.
+- **Routy (`routes/`)** – definiują dostępne endpointy API i przekazują żądania do odpowiednich kontrolerów.
+- **Middleware (`middleware/`)** – pośredniczy w obsłudze żądań (np. autoryzacja, walidacja).
+- **Modele (`models/`)** – schematy danych MongoDB.
+
+---
+
+## **3.2 Kontrolery i powiązane routy**
+Każdy kontroler implementuje logikę dla określonego zasobu, a powiązane pliki routów mapują odpowiednie endpointy na funkcje kontrolera.
+
+---
+
+## **3.2.1 Autoryzacja – `authController.js` & `authRouter.js`**
+
+### **Opis**
+Obsługuje rejestrację, logowanie i wylogowanie użytkowników. Wykorzystuje:
+- **Bcrypt** do hashowania haseł.
+- **JWT** do autoryzacji użytkowników.
+- **Middleware walidacji** (`validateRegisterInput`, `validateLoginInput`).
+
+### **Routy – `authRouter.js`**
+| Metoda | Ścieżka          | Opis |
+|--------|-----------------|------|
+| `POST` | `/api/auth/register` | Rejestracja nowego użytkownika |
+| `POST` | `/api/auth/login`    | Logowanie użytkownika |
+| `GET`  | `/api/auth/logout`   | Wylogowanie użytkownika |
+
+**Implementacja Routera**
+```javascript
+import { Router } from "express";
+const router = Router();
+import { login, logout, register } from "../controllers/authController.js";
+import { validateRegisterInput, validateLoginInput } from "../middleware/validationMiddleware.js";
+
+router.post("/register", validateRegisterInput, register);
+router.post("/login", validateLoginInput, login);
+router.get("/logout", logout);
+
+export default router;
+```
+---
+
+## **3.2.2 Zarządzanie biurkami – `deskController.js` & `deskRouter.js`**
+
+### **Opis**
+Obsługuje operacje CRUD dla biurek oraz rezerwacje.
+
+### **Routy – `deskRouter.js`**
+| Metoda  | Ścieżka               | Opis |
+|---------|----------------------|------|
+| `GET`   | `/api/desks`         | Pobranie listy biurek |
+| `GET`   | `/api/desks/booked`  | Pobranie rezerwacji użytkownika |
+| `POST`  | `/api/desks`         | Tworzenie nowego biurka |
+| `PATCH` | `/api/desks/:id`     | Aktualizacja biurka |
+| `DELETE`| `/api/desks/:id`     | Usunięcie biurka |
+| `PATCH` | `/api/desks/:id/book` | Rezerwacja biurka |
+| `PATCH` | `/api/desks/:id/cancelBooking` | Anulowanie rezerwacji |
+
+**Implementacja Routera**
+```javascript
+import { Router } from "express";
+const router = Router();
+import {
+  getAllDesks,
+  getDesk,
+  deleteDesk,
+  updateDesk,
+  createDesk,
+  BookDesk,
+  getUserBookedDesk,
+  CancelBooking,
+} from "../controllers/deskController.js";
+import { validateDeskInput, validateIdParam } from "../middleware/validationMiddleware.js";
+
+router.route("/booked").get(getUserBookedDesk);
+router.route("/").get(getAllDesks).post(createDesk, validateDeskInput);
+
+router
+  .route("/:id")
+  .get(validateIdParam, getDesk)
+  .patch(validateIdParam, updateDesk)
+  .delete(validateIdParam, deleteDesk);
+
+router.patch("/:id/book", validateIdParam, BookDesk);
+router.patch("/:id/cancelBooking", validateIdParam, CancelBooking);
+
+export default router;
+```
+---
+
+## **3.2.3 Zarządzanie użytkownikami – `userController.js` & `userRouter.js`**
+
+### **Opis**
+Obsługuje operacje na użytkownikach:
+- Pobieranie danych aktualnego użytkownika.
+- Pobieranie wszystkich użytkowników (admin).
+- Aktualizacja profilu.
+- Pobieranie statystyk aplikacji.
+
+### **Routy – `userRouter.js`**
+| Metoda  | Ścieżka               | Opis |
+|---------|----------------------|------|
+| `GET`   | `/api/users/current-user` | Pobranie danych aktualnego użytkownika |
+| `GET`   | `/api/users/getUserById/:id` | Pobranie użytkownika po ID |
+| `GET`   | `/api/users/all-users` | Pobranie wszystkich użytkowników |
+| `GET`   | `/api/users/admin/app-stats` | Pobranie statystyk aplikacji (admin) |
+| `PATCH` | `/api/users/update-user` | Aktualizacja użytkownika |
+
+---
+
+## **3.3 Przykłady funkcji kontrolera**
+
+### **Tworzenie biurka – `createDesk`**
+```javascript
+export const createDesk = async (req, res) => {
+  try {
+    const desk = await Desk.create(req.body);
+    res.status(StatusCodes.CREATED).json({ desk });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
+};
+```
+
+---
+
+### **Rezerwacja biurka – `BookDesk`**
+```javascript
+export const BookDesk = async (req, res) => {
+  try {
+    const existingBooking = await Desk.findOne({ bookedBy: req.user.userId });
+    if (existingBooking) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "User has already booked another desk" });
+    }
+    const desk = await Desk.findById(req.params.id);
+    if (!desk) return res.status(StatusCodes.NOT_FOUND).json({ message: "Desk not found" });
+    if (desk.status !== "available") {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Desk is not available for booking" });
+    }
+    desk.bookedBy = req.user.userId;
+    desk.status = "booked";
+    const updatedDesk = await desk.save();
+    res.status(StatusCodes.OK).json({ msg: "Desk booked successfully", desk: updatedDesk });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
+};
+```
+
+---
+
+## **Podsumowanie**
+- **Kontrolery** implementują logikę biznesową.
+- **Routy** łączą ścieżki API z odpowiednimi funkcjami kontrolera.
+- **Middleware** waliduje dane i zabezpiecza dostęp.
+- **Express.js** obsługuje komunikację między klientem a serwerem.
+
+**Dzięki temu backend jest modularny, przejrzysty i łatwy do rozwijania! 🚀**
+
+
 
 ---
 
