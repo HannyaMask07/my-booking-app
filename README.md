@@ -31,7 +31,7 @@ DeskBooker to aplikacja webowa umożliwiająca **rezerwację biurek** w przestrz
 - **React Query** – zarządzanie stanem i fetchowanie danych.
 - **Styled Components** – stylizacja komponentów.
 
-### **Struktura plików aplikacji**
+### **Struktura folderów aplikacji**
 
 ```
 DeskBooker/
