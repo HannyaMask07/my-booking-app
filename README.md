@@ -2,9 +2,103 @@
 
 ## 1. Wstęp
 
-### **Opis aplikacji**
+# Dokumentacja aplikacji DeskBooker
 
-DeskBooker to aplikacja webowa umożliwiająca **rezerwację biurek** w przestrzeni biurowej. System pozwala użytkownikom na przeglądanie dostępnych biurek, dokonywanie rezerwacji oraz ich anulowanie. Administratorzy mają dodatkowe uprawnienia do zarządzania biurkami i użytkownikami.
+## 1. Ogólny przegląd architektury
+
+Aplikacja **DeskBooker** to system rezerwacji biurek, który składa się z trzech głównych warstw:
+
+- **Frontend (React.js)** – interfejs użytkownika komunikujący się z backendem poprzez REST API.
+- **Backend (Node.js + Express)** – obsługuje logikę biznesową, autoryzację i dostęp do bazy danych.
+- **Baza danych (MongoDB)** – przechowuje informacje o użytkownikach, biurkach i rezerwacjach.
+
+### Diagram wysokopoziomowej architektury:
+![image](https://github.com/user-attachments/assets/007e31af-7403-4fe5-a4b6-fc71dfefa87f)
+
+---
+
+## 2. Przepływ danych w aplikacji
+
+Przykładowy scenariusz rezerwacji biurka przez użytkownika:
+
+1. Użytkownik loguje się do aplikacji (autoryzacja JWT).
+2. Pobiera listę dostępnych biurek z backendu.
+3. Wybiera biurko i wysyła żądanie rezerwacji.
+4. Backend waliduje żądanie, aktualizuje bazę danych i zwraca potwierdzenie.
+5. Użytkownik otrzymuje aktualizację na frontendzie.
+
+### Diagram przepływu danych:
+![image](https://github.com/user-attachments/assets/1d4a25bc-6528-4f3c-a29c-1acdab86a3e2)
+
+---
+
+## 3. Struktura aplikacji
+
+Aplikacja podzielona jest na kilka modułów:
+
+### Backend (Node.js + Express)
+
+- `routes/` – Definiuje trasy API
+- `controllers/` – Logika biznesowa
+- `models/` – Schematy MongoDB
+- `middleware/` – Obsługa autoryzacji i błędów
+- `utils/` – Funkcje pomocnicze
+- `server.js` – Główny serwer aplikacji
+
+#### Diagram struktury backendu:
+
+![image](https://github.com/user-attachments/assets/1a03e15a-1720-49c3-8f00-36cfbf6be5a3)
+
+### Frontend (React.js)
+
+- `components/` – Komponenty UI
+- `pages/` – Strony aplikacji
+- `utils/` – Funkcje pomocnicze
+- `App.jsx` – Główna konfiguracja routingu
+
+#### Diagram struktury frontendowej:
+
+![image](https://github.com/user-attachments/assets/9cd97af7-c9a8-4e08-a6cc-fdedc8e45c6b)
+
+---
+
+## 4. Komunikacja między warstwami
+
+Frontend i backend komunikują się poprzez REST API, wykorzystując następujące mechanizmy:
+
+**Autoryzacja JWT** – użytkownik otrzymuje token przy logowaniu i przesyła go w nagłówkach kolejnych zapytań.
+**Żądania HTTP** – frontend wysyła żądania do backendu (np. `GET /api/desks` pobiera listę biurek).
+**Obsługa błędów** – backend zwraca kody błędów (np. `401 Unauthorized` w przypadku braku tokena).
+
+---
+
+## 5. Technologia i narzędzia
+
+Aplikacja wykorzystuje następujący stos technologiczny:
+
+| Warstwa         | Technologia                                                |
+| --------------- | ---------------------------------------------------------- |
+| **Frontend**    | React.js, Vite, React Router, React Query                  |
+| **Backend**     | Node.js, Express.js, JWT, Mongoose                         |
+| **Baza danych** | MongoDB, Mongoose                                          |
+| **Hosting**     | Netlify (frontend), Heroku/VPS (backend)                   |
+| **DevOps**      | PM2 (zarządzanie procesami), dotenv (zmienne środowiskowe) |
+
+---
+
+## 6. Diagramy relacji
+
+Aplikacja przechowuje dane w **MongoDB**, gdzie główne modele to **User** i **Desk**.
+
+#### Diagram relacji między użytkownikami a biurkami:
+![deskbooker_erd](https://github.com/user-attachments/assets/359ecfa5-8eb4-4109-a77f-a47499622d3e)
+
+---
+
+## 7. Podsumowanie
+
+Aplikacja **DeskBooker** to system rezerwacji biurek, który wykorzystuje nowoczesne technologie webowe do zapewnienia wygodnego i bezpiecznego dostępu do zasobów biurowych. Dzięki **React.js**, **Node.js**, oraz **MongoDB**, system zapewnia skalowalność i wydajność, a zaimplementowane mechanizmy autoryzacji i zarządzania danymi gwarantują bezpieczeństwo użytkowników.
+
 
 ### **Główne funkcjonalności**
 
@@ -124,9 +218,6 @@ DeskBooker wykorzystuje **MongoDB** jako bazę danych NoSQL do przechowywania in
 
 - **Users** – przechowuje dane użytkowników.
 - **Desks** – przechowuje informacje o biurkach i ich rezerwacjach.
-
-### **Diagram relacji bazy danych**
-![deskbooker_erd](https://github.com/user-attachments/assets/359ecfa5-8eb4-4109-a77f-a47499622d3e)
 
 ### **Konfiguracja bazy danych**
 
