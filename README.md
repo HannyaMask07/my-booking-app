@@ -1182,7 +1182,7 @@ Wrappery odpowiadają za **organizację i strukturę układu interfejsu**, umoż
 
 **Struktura wrapperów**
 
-### **Wrappery – `src/rappers`**
+### **Wrappery – `src/wrappers`**
 | Nazwa Wrappera | Opis |
 |----------------|-----------------|
 | BigSidebar.js | Wrapper dla dużego paska bocznego |
