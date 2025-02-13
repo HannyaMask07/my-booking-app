@@ -470,9 +470,7 @@ export default router;
 
 ## **3.3 Przykłady funkcji kontrolera**
 
-# Przykłady funkcji kontrolera
-
-## 3.3 Jak routy współpracują z kontrolerami?
+## **3.3.1 Jak routy współpracują z kontrolerami?**
 Router Express.js określa dostępne ścieżki API.
 Middleware walidacji sprawdza poprawność danych wejściowych.
 Kontroler obsługuje żądanie, wykonuje logikę biznesową i komunikuje się z bazą danych przez modele.
@@ -493,7 +491,8 @@ Kontroler sprawdza dostępność biurka, aktualizuje jego status w bazie i zwrac
 }
 ```
 
-## 3.4.1 Tworzenie biurka – createDesk (DeskController)
+## 3.3.2 Przykłady implementacji kontrollera 
+###Tworzenie biurka – createDesk (DeskController)
 Tworzenie biurka to operacja **POST** na endpoint **/api/desks**. Kontroler przyjmuje dane wejściowe, waliduje je i zapisuje nowe biurko do bazy danych.
 
 ### Implementacja (JavaScript)
@@ -539,7 +538,7 @@ Content-Type: application/json
 }
 ```
 
-## 3.4.2 Rezerwacja biurka – BookDesk (DeskController)
+### Rezerwacja biurka – BookDesk (DeskController)
 Rezerwacja biurka to operacja **PATCH** na endpoint **/api/desks/:id/book**. Kontroler sprawdza, czy biurko jest dostępne, a następnie przypisuje je do użytkownika.
 
 ### Implementacja (JavaScript)
