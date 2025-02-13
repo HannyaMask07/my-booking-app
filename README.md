@@ -951,5 +951,3 @@ Plik `server.js`:
 
 DeskBooker to aplikacja do rezerwacji biurek z **Express.js + MongoDB** na backendzie oraz **React + Vite** na frontendzie. Obsługuje autoryzację JWT, zarządzanie użytkownikami i rezerwację biurek.
 
-🚀 **Gotowa do wdrożenia i dalszego rozwijania!**
-
