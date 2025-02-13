@@ -805,13 +805,147 @@ const decoded = verifyJWT(token);
 - `middleware/` obsługuje autoryzację, walidację i błędy.
 - `utils/` dostarcza funkcje pomocnicze do obsługi JWT i haseł.
 
-Dzięki temu backend jest modularny, bezpieczny i dobrze zarządzany! 🚀
-
-
-
-
-
 ---
+## **5. Server.js**
+
+Plik `server.js` jest głównym punktem wejściowym backendu aplikacji DeskBooker. Odpowiada za inicjalizację serwera Express, konfigurację middleware, podłączenie do bazy danych MongoDB oraz obsługę tras API.
+
+### **5.1. Importowanie Modułów i Konfiguracja Środowiska**
+
+Na początku plik importuje wymagane moduły oraz ładuje zmienne środowiskowe z pliku `.env`.
+
+```javascript
+import "express-async-errors";
+import * as dotenv from "dotenv";
+dotenv.config();
+import express from "express";
+import morgan from "morgan";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+```
+
+### \*\*Moduły używane w \*\***`server.js`**
+
+| Moduł                  | Opis                                                        |
+| ---------------------- | ----------------------------------------------------------- |
+| `express`              | Framework do obsługi serwera API                            |
+| `morgan`               | Logger HTTP do rejestrowania zapytań w trybie deweloperskim |
+| `mongoose`             | Biblioteka ODM dla MongoDB                                  |
+| `cookieParser`         | Middleware do obsługi ciasteczek                            |
+| `express-async-errors` | Obsługuje błędy asynchroniczne w Express                    |
+
+### **5.2. Importowanie Routerów**
+
+Serwer obsługuje różne endpointy API, które są zarządzane przez dedykowane routery:
+
+```javascript
+import deskRouter from "./routes/deskRouter.js";
+import authRouter from "./routes/authRouter.js";
+import userRouter from "./routes/userRouter.js";
+```
+
+| Router       | Opis                                                            |
+| ------------ | --------------------------------------------------------------- |
+| `deskRouter` | Obsługuje operacje CRUD dla biurek i rezerwacji                 |
+| `authRouter` | Obsługuje rejestrację, logowanie i wylogowanie użytkowników     |
+| `userRouter` | Obsługuje operacje na użytkownikach, w tym aktualizację profilu |
+
+### **5.3. Importowanie Middleware**
+
+Middleware zapewniają dodatkowe funkcjonalności, takie jak autoryzacja użytkowników i obsługa błędów.
+
+```javascript
+import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
+import { authenticateUser } from "./middleware/authMiddleware.js";
+```
+
+| Middleware               | Opis                                             |
+| ------------------------ | ------------------------------------------------ |
+| `errorHandlerMiddleware` | Globalny middleware do obsługi błędów            |
+| `authenticateUser`       | Middleware do weryfikacji tokena JWT użytkownika |
+
+### **5.4. Konfiguracja Middleware**
+
+```javascript
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+app.use(cookieParser());
+app.use(express.json());
+```
+
+| Middleware       | Opis                                             |
+| ---------------- | ------------------------------------------------ |
+| `morgan("dev")`  | Rejestruje zapytania HTTP w trybie deweloperskim |
+| `cookieParser()` | Pozwala na obsługę ciasteczek                    |
+| `express.json()` | Pozwala na przetwarzanie JSON w zapytaniach      |
+
+### **5.5. Definiowanie Tras API**
+
+### **Rejestracja Routerów**
+
+Serwer przekazuje obsługę określonych ścieżek do odpowiednich routerów:
+
+```javascript
+app.use("/api/v1/desks", authenticateUser, deskRouter);
+app.use("/api/v1/users", authenticateUser, userRouter);
+app.use("/api/v1/auth", authRouter);
+```
+
+| Ścieżka         | Router       | Middleware         |
+| --------------- | ------------ | ------------------ |
+| `/api/v1/desks` | `deskRouter` | `authenticateUser` |
+| `/api/v1/users` | `userRouter` | `authenticateUser` |
+| `/api/v1/auth`  | `authRouter` | -                  |
+
+Endpointy **`desks`**\*\* i \*\***`users`** wymagają uwierzytelnienia za pomocą `authenticateUser`, podczas gdy **`auth`** jest publiczny.
+
+### **5.6. Globalna Obsługa Błędów**
+
+Wszystkie błędy są obsługiwane centralnie przez `errorHandlerMiddleware`:
+
+```javascript
+app.use(errorHandlerMiddleware);
+```
+
+Dzięki temu unika się duplikacji kodu obsługi błędów w różnych częściach aplikacji.
+
+### **5.7. Podłączenie do MongoDB i Uruchomienie Serwera**
+
+Serwer łączy się z bazą MongoDB i nasłuchuje na określonym porcie:
+
+```javascript
+const port = process.env.PORT || 5100;
+
+try {
+  await mongoose.connect(process.env.MONGO_URL);
+  app.listen(port, () => {
+    console.log(`server running on PORT ${port}...`);
+  });
+} catch (error) {
+  console.log(error);
+  process.exit(1);
+}
+```
+
+| Krok                 | Opis                                                    |
+| -------------------- | ------------------------------------------------------- |
+| Pobranie portu       | Serwer pobiera port z pliku `.env` lub domyślnie `5100` |
+| Połączenie z MongoDB | `mongoose.connect(process.env.MONGO_URL)`               |
+| Obsługa błędów       | Jeśli połączenie się nie powiedzie, serwer wyłącza się  |
+
+### **5.8. Podsumowanie**
+
+Plik `server.js`:
+
+- Inicjalizuje serwer Express.
+- Konfiguruje middleware (logowanie, ciasteczka, JSON).
+- Definiuje ścieżki API i ich routery.
+- Obsługuje autoryzację JWT dla zabezpieczonych endpointów.
+- Podłącza aplikację do MongoDB.
+- Zapewnia globalną obsługę błędów.
+
 
 ## **Podsumowanie**
 
