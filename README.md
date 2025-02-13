@@ -1392,6 +1392,7 @@ Proces logowania użytkownika do aplikacji **DeskBooker** w celu uzyskania dost�
 - **Błąd logowania** –
   
   ![image](https://github.com/user-attachments/assets/6dbf7097-0775-41b3-ba7b-cda30884d51f)
+
   *(Komunikat "Invalid credentials" po błędnym wpisaniu danych).*
 - **Przekierowanie do panelu użytkownika** –
   ![image](https://github.com/user-attachments/assets/e39fb823-5861-4a02-b787-c4711cccee73)
