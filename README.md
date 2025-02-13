@@ -946,7 +946,7 @@ Plik `server.js`:
 - Podłącza aplikację do MongoDB.
 - Zapewnia globalną obsługę błędów.
 
-# Frontend Dokumentacja - DeskBooker
+# Frontend
 
 ## 1. Wstęp
 
@@ -988,7 +988,15 @@ my-booking-app/
 
 ---
 
-## 3. Wrappery i Stylizacja
+## Wykorzystanie Wrapperów, Komponentów i Stron w DeskBooker
+
+### **1. Integracja Wrapperów, Komponentów i Stron**
+
+Aplikacja DeskBooker jest zbudowana w architekturze komponentowej, gdzie poszczególne elementy interfejsu są podzielone na **wrappery**, **komponenty UI** i **strony aplikacji**. Struktura ta umożliwia **reużywalność kodu**, lepsze zarządzanie stylizacją oraz czytelność projektu.
+
+### **1.1 Wrappery jako elementy strukturalne**
+
+Wrappery odpowiadają za **organizację i strukturę układu interfejsu**, umożliwiając zachowanie jednolitego wyglądu i stylu w całej aplikacji. Przykładem jest **`DeskContainer.js`**, który grupuje poszczególne biurka.
 
 **Struktura wrapperów**
 
@@ -1014,44 +1022,28 @@ my-booking-app/
 | Testing.js | Wrapper testowy |
 | ThemeToggle.js | Wrapper dla przełącznika motywu |
 
-### **Desk.js**
-
-Przykład: **Desk.js** to wrapper dla biurek, który wykorzystuje **Styled Components** do zapewnienia stylizacji.
+#### **Przykład kodu: DeskContainer.js**
 
 ```javascript
 import styled from "styled-components";
 
-const Wrapper = styled.article`
-  background: var(--background-secondary-color);
-  border-radius: var(--border-radius);
+const Wrapper = styled.section`
   display: grid;
-  grid-template-rows: 1fr auto;
-  box-shadow: var(--shadow-2);
-  
-  header {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--grey-100);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-  }
-
-  .main-icon {
-    width: 60px;
-    height: 60px;
-    display: grid;
-    place-items: center;
-    background: var(--primary-500);
-    border-radius: var(--border-radius);
-  }
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 2rem;
 `;
 
 export default Wrapper;
 ```
 
+Wrapper `DeskContainer.js` zapewnia jednolitą strukturę dla widoku biurek, układając je w siatkę (**CSS Grid**), co poprawia **czytelność i responsywność** aplikacji.
+
 ---
 
-## 4. Komponenty UI
+### **1.2 Komponenty UI jako interaktywne elementy**
+
+Komponenty UI są używane do wyświetlania informacji oraz umożliwiają interakcję użytkownika z systemem. Na przykład komponent `Desk.jsx` odpowiada za wyświetlenie informacji o pojedynczym biurku i obsługę rezerwacji.
 
 **Struktura komponentów UI**
 
@@ -1074,30 +1066,14 @@ export default Wrapper;
 | ThemeToggle.jsx | Komponent przełącznika motywu |
 | UserDeskContainer.jsx | Komponent kontenera biurek użytkownika |
 
-### **Desk.jsx**
-
-Komponent **Desk** odpowiada za wyświetlanie pojedynczego biurka i jego szczegółów.
+#### **Przykład kodu: Desk.jsx**
 
 ```javascript
-import { useEffect, useState } from "react";
 import { PiDesktopBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Desk";
-import customFetch from "../utils/customFetch";
 
 const Desk = ({ _id, location, status, deskNumber, bookedBy }) => {
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (bookedBy) {
-        const response = await customFetch(`/users/getUserById/${bookedBy}`);
-        setUserName(response.data.user.name);
-      }
-    };
-    fetchUser();
-  }, [bookedBy]);
-
   return (
     <Wrapper>
       <header>
@@ -1107,7 +1083,7 @@ const Desk = ({ _id, location, status, deskNumber, bookedBy }) => {
         <h5>{location} #{deskNumber}</h5>
       </header>
       <div className="content">
-        {bookedBy && <p>Booked by: {userName}</p>}
+        {bookedBy && <p>Booked by: {bookedBy}</p>}
         <div>Status: {status}</div>
         <Link to={`/book-desk/${_id}`} className="btn">Book</Link>
       </div>
@@ -1118,9 +1094,13 @@ const Desk = ({ _id, location, status, deskNumber, bookedBy }) => {
 export default Desk;
 ```
 
+Komponent `Desk.jsx` korzysta z `Wrapper.js` do zachowania jednolitego wyglądu. Dzięki niemu użytkownik może zobaczyć **lokalizację biurka, jego status oraz opcję rezerwacji**.
+
 ---
 
-## 5. Strony aplikacji
+### **1.3 Strony aplikacji jako ukierunkowane widoki**
+
+Każda funkcjonalność aplikacji posiada osobny widok strony, który agreguje komponenty oraz wykorzystuje wrappery do organizacji treści. Strona **AllDesks.jsx** odpowiada za listę wszystkich dostępnych biurek.
 
 **Struktura stron w aplikacji**
 
@@ -1143,13 +1123,13 @@ export default Desk;
 | Stats.jsx | Strona statystyk |
 | UserBookings.jsx | Strona rezerwacji użytkownika |
 
-### **AllDesks.jsx**
-
-Strona **AllDesks** wyświetla listę wszystkich dostępnych biurek.
+#### **Przykład kodu: AllDesks.jsx**
 
 ```javascript
 import customFetch from "../utils/customFetch";
 import { useLoaderData } from "react-router-dom";
+import Desk from "../components/Desk";
+import DeskContainer from "../assets/wrappers/DeskContainer";
 
 export const loader = async () => {
   const { data } = await customFetch.get("/desks");
@@ -1159,40 +1139,35 @@ export const loader = async () => {
 const AllDesks = () => {
   const { data } = useLoaderData();
   return (
-    <div>
+    <DeskContainer>
       {data.map(desk => (
         <Desk key={desk._id} {...desk} />
       ))}
-    </div>
+    </DeskContainer>
   );
 };
 
 export default AllDesks;
 ```
 
+Strona **AllDesks.jsx** korzysta z:
+- `customFetch` do pobrania danych o biurkach.
+- `DeskContainer` jako wrappera do organizacji układu.
+- `Desk.jsx` do wyświetlenia każdego biurka.
+
+Dzięki temu kod pozostaje **modularny, czytelny i latwy do rozbudowy**.
+
 ---
 
-## 6. Zarządzanie danymi
+## **2. Jak komponenty, wrappery i strony współdziałają?**
 
-**Utils – `src/utils`**
-| Nazwa Pliku | Opis |
-|------------|-----------------|
-| customFetch.js | Wrapper funkcji do obsługi API |
-| links.jsx | Konfiguracja linków nawigacyjnych |
+### **2.1 Proces rezerwacji biurka**
 
-### **customFetch.js**
-
-Obsługuje żądania HTTP do API.
-
-```javascript
-import axios from "axios";
-
-const customFetch = axios.create({
-  baseURL: "/api/v1",
-});
-
-export default customFetch;
-```
+1. Użytkownik przechodzi na stronę **AllDesks.jsx**, która pobiera listę biurek i wyświetla je w `DeskContainer`.
+2. Każde biurko jest reprezentowane przez komponent `Desk.jsx`, który zawiera przycisk rezerwacji.
+3. Kliknięcie przycisku prowadzi do strony **BookDesk.jsx**, która obsługuje rezerwację.
+4. `BookDesk.jsx` wysyła zapytanie do API, aktualizując status biurka.
+5. Po zakończeniu rezerwacji użytkownik jest przekierowany z powrotem na `AllDesks.jsx`, gdzie biurko jest teraz oznaczone jako zajęte.
 
 ---
 
