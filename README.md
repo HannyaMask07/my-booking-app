@@ -1368,6 +1368,134 @@ Dzięki temu kod pozostaje **modularny, czytelny i latwy do rozbudowy**.
 
 ---
 
+# DeskBooker - Przypadki Użycia (Use Cases)
+
+## 1.1 Logowanie użytkownika
+
+### Opis
+Proces logowania użytkownika do aplikacji **DeskBooker** w celu uzyskania dostępu do rezerwacji biurek.
+
+### Aktorzy
+- Użytkownik
+
+### Przebieg podstawowy
+1. Użytkownik otwiera stronę **Logowania** (`/login`).
+2. Wprowadza swój adres e-mail i hasło w formularzu logowania.
+3. Kliknięcie przycisku **"Login"** powoduje wysłanie żądania do API.
+4. Serwer weryfikuje poprawność danych logowania.
+5. Po poprawnym logowaniu użytkownik otrzymuje token JWT i zostaje przekierowany do panelu użytkownika.
+
+### Przebieg alternatywny
+- **Błąd logowania** – jeśli użytkownik poda błędne dane (np. złe hasło), system wyświetla komunikat błędu **"Nieprawidłowe dane logowania"**.
+
+### Screenshoty
+- **Ekran główny aplikacji** - ![image](https://github.com/user-attachments/assets/fae6cb33-92a0-4781-ad7c-166550011f3d)
+- **Ekran logowania** – ![image](https://github.com/user-attachments/assets/5f917ddf-8ab8-4e76-9451-898fe6141cac) (Formularz logowania z polami email/hasło i przyciskiem „Submit”).
+- **Błąd logowania** – ![image](https://github.com/user-attachments/assets/6dbf7097-0775-41b3-ba7b-cda30884d51f) (Komunikat "Invalid credentials" po błędnym wpisaniu danych).
+- **Przekierowanie do panelu użytkownika** – ![image](https://github.com/user-attachments/assets/e39fb823-5861-4a02-b787-c4711cccee73) (Strona główna po zalogowaniu).
+
+---
+
+## 8.2 Tworzenie nowego biurka przez administratora
+
+### Opis
+Administrator dodaje nowe biurko do systemu.
+
+### Aktorzy
+- Administrator
+
+### Przebieg podstawowy
+1. Administrator loguje się do aplikacji.
+2. Przechodzi do sekcji **„Add desk”** (`/dashboard`).
+4. Administrator wypełnia pola:
+   - Desk Number (np. 50)
+   - Desk Location (np. „Sector A”)
+   - Desk Type (np. „Standard”)
+   - Desk Amenities (np. ,,Mouse, Keybord, Sindgle Monitor")
+5. Kliknięcie przycisku **„Submit”** powoduje wysłanie żądania do API.
+6. Serwer zapisuje nowe biurko w bazie danych.
+7. Administrator widzi nowe biurko na liście.
+
+### Przebieg alternatywny
+- **Błąd walidacji** – jeśli administrator nie uzupełni wszystkich wymaganych pól, system wyświetla komunikat **„Wypełnij wszystkie wymagane pola”**.
+
+### Screenshoty
+- **Formularz dodawania biurka** – ![image](https://github.com/user-attachments/assets/52573f2a-9551-46eb-8428-c3def08e70f0)
+- **Nowe biurko na liście** – ![image](https://github.com/user-attachments/assets/255b5217-4828-4475-b2db-7ae86abbe055)
+- **Błąd walidacji** – ![image](https://github.com/user-attachments/assets/28c3c362-77aa-4989-ae4e-20ae3cd0f518)
+
+
+---
+
+## 8.3 Rezerwacja biurka przez użytkownika
+
+### Opis
+Użytkownik rezerwuje dostępne biurko.
+
+### Aktorzy
+- Użytkownik
+
+### Przebieg podstawowy
+1. Użytkownik loguje się do aplikacji.
+2. Przechodzi do zakładki **„All Desks”** (`dashboard/all-desks`).
+3. Wybiera dostępne biurko z listy.
+4. Kliknięcie przycisku **„Book”** powoduje wysłanie żądania do API.
+5. Serwer przypisuje biurko do użytkownika i zmienia jego status na "Booked".
+6. Użytkownik widzi swoje zarezerwowane biurko w zakładce **„My Booking”**.
+
+### Przebieg alternatywny
+- **Zła data rezerwacji** – jeśli data rozpoczęcia rezerwacji biurka nie jest większa niż data zaczęcia rezerwacji, system wyświetla komunikat **"End Time must be greater then Start Time"**.
+
+### Screenshoty
+- **Lista dostępnych biurek** – ![image](https://github.com/user-attachments/assets/e2b88eb7-38dc-433b-915c-eb465358ac6d)
+- **Potwierdzenie rezerwacji** – ![image](https://github.com/user-attachments/assets/30264dca-5e7f-4e3b-94bd-ca2850f4cd9a)
+- **Lista moich rezerwacji** – ![image](https://github.com/user-attachments/assets/65da0b16-37c6-4ae4-9cf4-ef83f349acd2)
+- **Błąd – zła data** – ![image](https://github.com/user-attachments/assets/1f06cd76-60f1-43a6-b0fd-9acf7ef6ef35)
+
+---
+
+## 8.4 Przykładowy błąd – problem z rezerwacją biurka
+
+### Opis
+Scenariusz, w którym użytkownik napotyka błąd przy rezerwacji biurka.
+
+### Aktorzy
+- Użytkownik
+
+### Przebieg błędny
+1. Użytkownik próbuje zarezerwować biurko.
+2. Serwer wykrywa, że użytkownik **ma już zarezerwowane biurko**.
+3. System zwraca komunikat **"User has already booked another desk"**.
+
+### Screenshoty
+- **Błąd – użytkownik ma już rezerwację** – ![image](https://github.com/user-attachments/assets/2f8e9d9b-3909-470e-8070-0f0580dacaf3)
+
+---
+
+## 8.5 Anulowanie rezerwacji biurka
+
+### Opis
+Użytkownik anuluje rezerwację swojego biurka.
+
+### Aktorzy
+- Użytkownik
+
+### Przebieg podstawowy
+1. Użytkownik loguje się do aplikacji.
+2. Przechodzi do zakładki **„My Booking”**.
+3. Kliknięcie przycisku **„Cancel Booking”** powoduje wysłanie żądania do API.
+4. Serwer zmienia status biurka na "Dostępne".
+5. Biurko znika z listy rezerwacji użytkownika.
+
+### Screenshoty
+- **Lista moich rezerwacji** – ![image](https://github.com/user-attachments/assets/b32ea696-9198-4a9f-acb3-1a2a428c9aa9)
+- **Potwierdzenie anulowania** – ![image](https://github.com/user-attachments/assets/0d07db37-496e-4647-85f2-f3c2a2fb79bc)
+
+---
+
+# Podsumowanie
+Dokument zawiera kluczowe przypadki użycia aplikacji **DeskBooker**.
+
 
 ## **Podsumowanie**
 
