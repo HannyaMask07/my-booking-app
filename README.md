@@ -324,6 +324,7 @@ export const DESK_LOCATION = {
 - `DESK_STATUS` – określa dostępność biurek (`available`, `booked`).
 - `DESK_TYPE` – definiuje typy biurek (`standard`, `standing`, `private`).
 - `DESK_LOCATION` – dostępne lokalizacje biurek w biurze (`Sector A`, `Sector B`, `Sector C`).
+- `DESK_AMENITIES` – określa wyposarzenie biurka (`Two Monitors`, `Mouse`, `Headset`).
 
 Modele `DeskModel.js` odwołują się do tych wartości w polach `status`, `type` i `location`, zapewniając ograniczenie danych do określonych wartości.
 
