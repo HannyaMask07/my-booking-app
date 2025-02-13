@@ -991,7 +991,7 @@ my-booking-app/
 
 Plik `App.jsx` pełni kluczową rolę w zarządzaniu routami aplikacji oraz definiowaniu jej układu. Korzysta z **React Router** do obsługi nawigacji, a także z dynamicznych loaderów i akcji do obsługi danych.
 
-### **Struktura routingu w `App.jsx`**
+### 3.1 **Struktura routingu w `App.jsx`**
 
 ```javascript
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -1060,7 +1060,7 @@ const App = () => {
 export default App;
 ```
 
-### **Funkcjonalność `App.jsx`**
+### 3.2 **Funkcjonalność `App.jsx`**
 
 1. **Obsługa routingu** – wykorzystuje `createBrowserRouter`, aby stworzyć dynamiczny system nawigacji w aplikacji.
 2. **Podział na layouty i podstrony** – `HomeLayout` służy jako główny kontener dla stron publicznych, a `DashboardLayout` dla użytkowników zalogowanych.
@@ -1071,7 +1071,7 @@ export default App;
 
 ---
 
-## 4. Jak `App.jsx` współdziała z innymi komponentami?
+## 3.3 Jak `App.jsx` współdziała z innymi komponentami?
 
 1. Użytkownik odwiedza stronę główną `/`, gdzie `HomeLayout` renderuje `Landing.jsx`.
 2. Jeśli chce się zalogować, przechodzi do `/login`, gdzie `Login.jsx` obsługuje akcję `loginAction`.
@@ -1080,13 +1080,13 @@ export default App;
 
 ---
 
-## Wykorzystanie Wrapperów, Komponentów i Stron w DeskBooker
+## 4 Wykorzystanie Wrapperów, Komponentów i Stron w DeskBooker
 
-### **1. Integracja Wrapperów, Komponentów i Stron**
+### **4.1.1 Integracja Wrapperów, Komponentów i Stron**
 
 Aplikacja DeskBooker jest zbudowana w architekturze komponentowej, gdzie poszczególne elementy interfejsu są podzielone na **wrappery**, **komponenty UI** i **strony aplikacji**. Struktura ta umożliwia **reużywalność kodu**, lepsze zarządzanie stylizacją oraz czytelność projektu.
 
-### **1.1 Wrappery jako elementy strukturalne**
+### **4.1.2 Wrappery jako elementy strukturalne**
 
 Wrappery odpowiadają za **organizację i strukturę układu interfejsu**, umożliwiając zachowanie jednolitego wyglądu i stylu w całej aplikacji. Przykładem jest **`DeskContainer.js`**, który grupuje poszczególne biurka.
 
@@ -1133,7 +1133,7 @@ Wrapper `DeskContainer.js` zapewnia jednolitą strukturę dla widoku biurek, uk�
 
 ---
 
-### **1.2 Komponenty UI jako interaktywne elementy**
+### **4.1.3 Komponenty UI jako interaktywne elementy**
 
 Komponenty UI są używane do wyświetlania informacji oraz umożliwiają interakcję użytkownika z systemem. Na przykład komponent `Desk.jsx` odpowiada za wyświetlenie informacji o pojedynczym biurku i obsługę rezerwacji.
 
@@ -1190,7 +1190,7 @@ Komponent `Desk.jsx` korzysta z `Wrapper.js` do zachowania jednolitego wyglądu.
 
 ---
 
-### **1.3 Strony aplikacji jako ukierunkowane widoki**
+### **4.1.4 Strony aplikacji jako ukierunkowane widoki**
 
 Każda funkcjonalność aplikacji posiada osobny widok strony, który agreguje komponenty oraz wykorzystuje wrappery do organizacji treści. Strona **AllDesks.jsx** odpowiada za listę wszystkich dostępnych biurek.
 
@@ -1251,9 +1251,9 @@ Dzięki temu kod pozostaje **modularny, czytelny i latwy do rozbudowy**.
 
 ---
 
-## **2. Jak komponenty, wrappery i strony współdziałają?**
+## **4.2 Jak komponenty, wrappery i strony współdziałają?**
 
-### **2.1 Proces rezerwacji biurka**
+### **4.2.1 Proces rezerwacji biurka**
 
 1. Użytkownik przechodzi na stronę **AllDesks.jsx**, która pobiera listę biurek i wyświetla je w `DeskContainer`.
 2. Każde biurko jest reprezentowane przez komponent `Desk.jsx`, który zawiera przycisk rezerwacji.
