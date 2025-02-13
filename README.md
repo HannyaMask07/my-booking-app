@@ -1223,6 +1223,11 @@ const Wrapper = styled.section`
 export default Wrapper;
 ```
 
+#### **Przykład widoku na stronie: DeskContainer.js**
+![image](https://github.com/user-attachments/assets/0f8373b5-7ca5-42c8-a0a8-b45e57523c5c)
+
+
+
 Wrapper `DeskContainer.js` zapewnia jednolitą strukturę dla widoku biurek, układając je w siatkę (**CSS Grid**), co poprawia **czytelność i responsywność** aplikacji.
 
 ---
@@ -1251,6 +1256,9 @@ Komponenty UI są używane do wyświetlania informacji oraz umożliwiają intera
 | SmallSidebar.jsx | Komponent małego paska bocznego |
 | ThemeToggle.jsx | Komponent przełącznika motywu |
 | UserDeskContainer.jsx | Komponent kontenera biurek użytkownika |
+
+#### **Przykład: Desk.jsx na widoku strony**
+![image](https://github.com/user-attachments/assets/580bdf72-7d3a-425e-8fcf-e4a2ae856cdb)
 
 #### **Przykład kodu: Desk.jsx**
 
@@ -1308,6 +1316,9 @@ Każda funkcjonalność aplikacji posiada osobny widok strony, który agreguje k
 | Register.jsx | Strona rejestracji |
 | Stats.jsx | Strona statystyk |
 | UserBookings.jsx | Strona rezerwacji użytkownika |
+
+#### **Przykład strony AllDesks**
+![image](https://github.com/user-attachments/assets/96292c63-bc5d-4bde-9490-e0fdb09d1b26)
 
 #### **Przykład kodu: AllDesks.jsx**
 
