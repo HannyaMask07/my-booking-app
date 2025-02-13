@@ -94,8 +94,8 @@ DeskBooker/
 1. **Pobranie kodu źródłowego**
 
    ```sh
-   git clone https://github.com/user/deskbooker.git
-   cd deskbooker
+   git clone [https://github.com/user/deskbooker.git](https://github.com/HannyaMask07/my-booking-app.git)
+   cd my-booking-app
    ```
 
 2. **Instalacja zależności**
