@@ -448,43 +448,138 @@ Obsługuje operacje na użytkownikach:
 
 ## **3.3 Przykłady funkcji kontrolera**
 
-### **Tworzenie biurka – `createDesk`**
+# Przykłady funkcji kontrolera
+
+## 3.3 Jak routy współpracują z kontrolerami?
+Router Express.js określa dostępne ścieżki API.
+Middleware walidacji sprawdza poprawność danych wejściowych.
+Kontroler obsługuje żądanie, wykonuje logikę biznesową i komunikuje się z bazą danych przez modele.
+Odpowiedź JSON jest zwracana do użytkownika.
+
+### Przykładowy przepływ – Rezerwacja biurka
+Użytkownik wysyła żądanie:
+```http
+PATCH /api/desks/65abc123456/book
+Authorization: Bearer <JWT_TOKEN>
+```
+Router **deskRouter.js** przekazuje żądanie do **BookDesk** w **deskController.js**.
+Kontroler sprawdza dostępność biurka, aktualizuje jego status w bazie i zwraca odpowiedź:
+```json
+{
+  "msg": "Desk booked successfully",
+  "desk": { "id": "65abc123456", "status": "booked" }
+}
+```
+
+## 3.4.1 Tworzenie biurka – createDesk (DeskController)
+Tworzenie biurka to operacja **POST** na endpoint **/api/desks**. Kontroler przyjmuje dane wejściowe, waliduje je i zapisuje nowe biurko do bazy danych.
+
+### Implementacja (JavaScript)
 ```javascript
 export const createDesk = async (req, res) => {
   try {
+    // Tworzenie nowego biurka na podstawie danych z requesta
     const desk = await Desk.create(req.body);
+
+    // Zwracamy nowo utworzone biurko
     res.status(StatusCodes.CREATED).json({ desk });
   } catch (error) {
+    // Obsługa błędów np. walidacyjnych
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 };
 ```
 
----
+### Przykładowe żądanie
+```http
+POST /api/desks
+Content-Type: application/json
 
-### **Rezerwacja biurka – `BookDesk`**
+{
+  "deskNumber": 25,
+  "location": "Sector B",
+  "status": "available",
+  "type": "standard"
+}
+```
+
+### Przykładowa odpowiedź
+```json
+{
+  "desk": {
+    "_id": "65abc987654",
+    "deskNumber": 25,
+    "location": "Sector B",
+    "status": "available",
+    "type": "standard",
+    "createdAt": "2024-02-13T12:00:00.000Z"
+  }
+}
+```
+
+## 3.4.2 Rezerwacja biurka – BookDesk (DeskController)
+Rezerwacja biurka to operacja **PATCH** na endpoint **/api/desks/:id/book**. Kontroler sprawdza, czy biurko jest dostępne, a następnie przypisuje je do użytkownika.
+
+### Implementacja (JavaScript)
 ```javascript
 export const BookDesk = async (req, res) => {
   try {
+    // Sprawdzenie, czy użytkownik nie ma już zarezerwowanego biurka
     const existingBooking = await Desk.findOne({ bookedBy: req.user.userId });
+
     if (existingBooking) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "User has already booked another desk" });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "User has already booked another desk" });
     }
+
+    // Pobranie biurka na podstawie ID
     const desk = await Desk.findById(req.params.id);
-    if (!desk) return res.status(StatusCodes.NOT_FOUND).json({ message: "Desk not found" });
+
+    if (!desk) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Desk not found" });
+    }
+
+    // Sprawdzenie dostępności biurka
     if (desk.status !== "available") {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "Desk is not available for booking" });
     }
+
+    // Aktualizacja danych biurka
     desk.bookedBy = req.user.userId;
     desk.status = "booked";
+
     const updatedDesk = await desk.save();
-    res.status(StatusCodes.OK).json({ msg: "Desk booked successfully", desk: updatedDesk });
+
+    res.status(StatusCodes.OK).json({
+      msg: "Desk booked successfully",
+      desk: updatedDesk,
+    });
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 };
 ```
 
+### Przykładowe żądanie
+```http
+PATCH /api/desks/65abc123456/book
+Authorization: Bearer <JWT_TOKEN>
+```
+
+### Przykładowa odpowiedź
+```json
+{
+  "msg": "Desk booked successfully",
+  "desk": {
+    "_id": "65abc123456",
+    "deskNumber": 12,
+    "location": "Sector A",
+    "status": "booked",
+    "bookedBy": "65def789012"
+  }
+}
+```
 ---
 
 ## **Podsumowanie**
