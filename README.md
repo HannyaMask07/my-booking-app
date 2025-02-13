@@ -1257,7 +1257,7 @@ Komponenty UI są używane do wyświetlania informacji oraz umożliwiają intera
 | ThemeToggle.jsx | Komponent przełącznika motywu |
 | UserDeskContainer.jsx | Komponent kontenera biurek użytkownika |
 
-#### **Przykład komponentu Desk.jsx na widoku strony:**
+#### **Przykład komponentu `Desk.jsx` na widoku strony:**
 ![image](https://github.com/user-attachments/assets/580bdf72-7d3a-425e-8fcf-e4a2ae856cdb)
 
 #### **Przykład kodu: Desk.jsx**
@@ -1317,7 +1317,7 @@ Każda funkcjonalność aplikacji posiada osobny widok strony, który agreguje k
 | Stats.jsx | Strona statystyk |
 | UserBookings.jsx | Strona rezerwacji użytkownika |
 
-#### **Przykład strony AllDesks:**
+#### **Przykład strony `AllDesks.jsx`:**
 ![image](https://github.com/user-attachments/assets/96292c63-bc5d-4bde-9490-e0fdb09d1b26)
 
 #### **Przykład kodu: AllDesks.jsx**
