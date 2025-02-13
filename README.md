@@ -125,6 +125,9 @@ DeskBooker wykorzystuje **MongoDB** jako bazę danych NoSQL do przechowywania in
 - **Users** – przechowuje dane użytkowników.
 - **Desks** – przechowuje informacje o biurkach i ich rezerwacjach.
 
+### **Diagram relacji bazy danych**
+![deskbooker_erd](https://github.com/user-attachments/assets/359ecfa5-8eb4-4109-a77f-a47499622d3e)
+
 ### **Konfiguracja bazy danych**
 
 Aby skonfigurować połączenie z bazą danych MongoDB, należy wykonać następujące kroki:
