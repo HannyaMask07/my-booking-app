@@ -687,8 +687,6 @@ app.use(errorHandlerMiddleware);
 
 #### 4.2.3 Middleware walidacji – `validationMiddleware.js`
 
-#### 4.2.3 Middleware walidacji – `validationMiddleware.js`
-
 Obsługuje walidację danych wejściowych za pomocą `express-validator`.
 
 | Metoda walidacji          | Opis                                                     |
