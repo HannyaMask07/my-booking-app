@@ -1489,11 +1489,9 @@ Użytkownik anuluje rezerwację swojego biurka.
 
 ---
 
-# Podsumowanie
-Dokument zawiera kluczowe przypadki użycia aplikacji **DeskBooker**.
-
-
 ## **Podsumowanie**
 
-DeskBooker to aplikacja do rezerwacji biurek z **Express.js + MongoDB** na backendzie oraz **React + Vite** na frontendzie. Obsługuje autoryzację JWT, zarządzanie użytkownikami i rezerwację biurek.
+DeskBooker to nowoczesna aplikacja webowa do zarządzania rezerwacją biurek, zbudowana na stosie MERN (MongoDB, Express.js, React.js, Node.js). Aplikacja obsługuje autoryzację JWT, zarządzanie użytkownikami i biurkami, rezerwację i anulowanie rezerwacji, a także panel administracyjny.
+Backend (Node.js + Express) odpowiada za logikę biznesową, autoryzację i operacje na bazie danych MongoDB. Frontend (React.js + Vite) zapewnia dynamiczny i intuicyjny interfejs użytkownika. Komunikacja między warstwami odbywa się przez REST API.
+Dzięki modularnej architekturze aplikacja jest skalowalna, bezpieczna i łatwa w utrzymaniu, umożliwiając efektywne zarządzanie przestrzenią biurową.
 
