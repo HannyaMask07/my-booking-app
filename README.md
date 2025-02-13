@@ -143,7 +143,7 @@ Aby skonfigurować połączenie z bazą danych MongoDB, należy wykonać następ
    npm install mongoose dotenv
    ```
 
-3. \*\*Połączenie z bazą danych w \*\***`server.js`**
+3. **Połączenie z bazą danych w `server.js`**
 
    ```javascript
    import mongoose from "mongoose";
