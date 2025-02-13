@@ -1,6 +1,6 @@
 # Dokumentacja Techniczna - DeskBooker
 
-## 1. Ogólny przegląd architektury
+## 1. Wstęp i ogólny przegląd architektury
 
 Aplikacja **DeskBooker** to system rezerwacji biurek, który składa się z trzech głównych warstw:
 
@@ -1400,7 +1400,7 @@ Proces logowania użytkownika do aplikacji **DeskBooker** w celu uzyskania dost�
 
 ---
 
-## 8.2 Tworzenie nowego biurka przez administratora
+## 1.2 Tworzenie nowego biurka przez administratora
 
 ### Opis
 Administrator dodaje nowe biurko do systemu.
@@ -1431,7 +1431,7 @@ Administrator dodaje nowe biurko do systemu.
 
 ---
 
-## 8.3 Rezerwacja biurka przez użytkownika
+## 1.3 Rezerwacja biurka przez użytkownika
 
 ### Opis
 Użytkownik rezerwuje dostępne biurko.
@@ -1458,7 +1458,7 @@ Użytkownik rezerwuje dostępne biurko.
 
 ---
 
-## 8.4 Przykładowy błąd – problem z rezerwacją biurka
+## 1.4 Przykładowy błąd – problem z rezerwacją biurka
 
 ### Opis
 Scenariusz, w którym użytkownik napotyka błąd przy rezerwacji biurka.
@@ -1476,7 +1476,7 @@ Scenariusz, w którym użytkownik napotyka błąd przy rezerwacji biurka.
 
 ---
 
-## 8.5 Anulowanie rezerwacji biurka
+## 1.5 Anulowanie rezerwacji biurka
 
 ### Opis
 Użytkownik anuluje rezerwację swojego biurka.
